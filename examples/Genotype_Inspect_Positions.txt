@@ -1,0 +1,4 @@
+chr_MT	4270
+chr_MT	6295
+chr_MT	15204
+chr_MT	15769
