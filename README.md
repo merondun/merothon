@@ -8,7 +8,8 @@ Merothon is a collection of scripts designed for genetic data analysis, focusing
 - [Scripts](#scripts)
   - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
-  - [Genomic Background Bootstrap Sampling](#genomic-bootstrap-sampling)
+  - [Genomic Background Bootstrap Sampling](#genomic-background-bootstrap-sampling)
+  - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
 
 ## Installation
 
@@ -34,6 +35,8 @@ Example from /examples/ directory: `calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vc
 
 If you have any invariant or constant sites in your VCF, you will get a warning "ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.", but it does not affect calculations for other sites (output will be nan). 
 
+OUTPUTS: 
+
 | chrVCF1 | posVCF1 | chrVCF2 | posVCF2 | num_missing_genotypesVCF1 | num_missing_genotypesVCF2 | R2                         |
 |---------|---------|---------|---------|---------------------------|---------------------------|----------------------------|
 | chr_MT  | 44      | chr_MT  | 4270    | 0                         | 0                         | 0.3048275862068961         |
@@ -42,24 +45,66 @@ If you have any invariant or constant sites in your VCF, you will get a warning 
 
 ### Plot Genotypes from VCF
 
-Plots color-coded genotypes for SNP positions. Provide a VCF file, a list of SNP positions (tab separated e.g. chr_MT	4270) a metadata file where $ID matches the sample names, and a phenotype of interest to distinguish individuals, as well as an output .png name.
+Plots color-coded genotypes for SNP positions. 
+
+INPUTS:
+
+Metadata (ID matches VCF sample IDS, any column (interpreted as string) to order individuals according to a phenotype). 
+
+```
+head Egg_Metadata.txt
+ID      EggType
+007_CB_ATP_CHN_F        Immaculate
+006_CB_ATP_CHN_F        Immaculate
+```
+
+Positions to map: 
+
+```
+head Genotype_Inspect_Positions.txt
+chr_MT  4270
+chr_MT  6295
+chr_MT  15204
+chr_MT  15769
+```
+
+... vcf, column name for the phenotype to order, output name for png, 
 
 Example from /examples/ directory: `plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --pos Genotype_Inspect_Positions.txt --phenotype EggType --out Eggtype.png --size 50`
 
-This will output a png showing genotypes via color, ordered by the EggType column in the metadata sheet. 
+OUTPUT: 
 
 ![Example Plot](examples/Eggtype.png)
 
 ### Genomic Background Bootstrap Sampling
 
-The command `bootstrap_sample` takes the difference of a value within a target region from the chromosomal background, *n* times. The required inputs files are tab separated and are:
+The command `bootstrap_sample` takes the difference of a value within a target region from the chromosomal background, *n* times.
+
+INPUTS (tab sep): 
 
 * 4 column bed-style file with chr, start, end, value - where value is the metric to bootstrap.
+
+```
+head chr_MT_log2CNV.bed
+chr_MT  0       499     0.67175572519084
+chr_MT  500     999     1.40123456790123
+chr_MT  1000    1499    1.51666666666667
+```
+
 * 4 column bed-style file with the regions of interest, with chr, start, end, name - where each 'name' will be sampled *n* times.   
 
-Example from /examples/ directory: `bootstrap_sample --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Bootstraps.txt --events 100 --seed 101`
+```
+head chr_MT_Regions.bed
+chr_MT  2823    3776    nad1
+chr_MT  4025    5053    nad2
+chr_MT  5429    6961    cox1
+``` 
+
+Example from /examples/ directory: `bootstrap_sample --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Bootstraps.txt --events 10000 --seed 101`
 
 Simply outputs the region $name, followed by the difference between the sampling event (target$value - background$value). Window overlap is INCLUSIVE, so if the region overlaps the genomic coordinates at all, it will be included. For base-pair data, simply encode $end as $start. Set seed for reproducibility. 
+
+OUTPUTS: 
 
 ```
 head chr_MT_log2CNV_Bootstraps.txt
@@ -80,9 +125,24 @@ The command `permutation_test` first calculates the observed mean within a targe
 INPUTS (tab sep): 
 
 * 4 column bed-style file with chr, start, end, value - where value is the metric of interest for permutations .
+
+```
+head chr_MT_log2CNV.bed
+chr_MT  0       499     0.67175572519084
+chr_MT  500     999     1.40123456790123
+chr_MT  1000    1499    1.51666666666667
+```
+
 * 4 column bed-style file with the regions of interest, with chr, start, end, name - where each 'name' will be sampled *n* times.   
 
-Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Permutations.txt --permutations 100 --seed 101`
+```
+head chr_MT_Regions.bed
+chr_MT  2823    3776    nad1
+chr_MT  4025    5053    nad2
+chr_MT  5429    6961    cox1
+```
+
+Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Permutations.txt --permutations 10000 --seed 101`
 
 OUTPUTS: region $name, observed difference of mean value within region - mean value from background, and the number of windows/sites considered within the target region. Window overlap is INCLUSIVE, so if the region overlaps the genomic coordinates at all, it will be included. For base-pair data, simply encode $end as $start. 
 
