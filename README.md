@@ -2,6 +2,15 @@
 
 Merothon is a collection of scripts designed for genetic data analysis, focusing on linkage disequilibrium calculations and genotype visualizations.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Scripts](#scripts)
+  - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
+  - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
+
+## Installation
+
 Most of the basic dependencies you likely already have, but it is easily installable with a fresh environment and setup.py:
 
 ```
@@ -14,7 +23,7 @@ pip install -e .
 
 ## Scripts
 
-### Calculate_R2_LD_VCFs.py
+### Calculating R2 All SNPs, 2 VCFS
 
 Calculates LD (R2) between the SNP genotypes in 2 VCF files. This is useful for estimating LD for e.g. a mtDNA variant and the rest of the autosomal SNPs. 
 
@@ -30,7 +39,7 @@ If you have any invariant or constant sites in your VCF, you will get a warning 
 | chr_MT  | 192     | chr_MT  | 4270    | 0                         | 0                         | 0.20816783216783216        |
 | chr_MT  | 196     | chr_MT  | 4270    | 0                         | 0                         | 0.19325217121588079        |
 
-### Plot_Genotypes.py
+### Plot Genotypes from VCF
 
 Plots color-coded genotypes for SNP positions. Provide a VCF file, a list of SNP positions (tab separated e.g. chr_MT	4270) a metadata file where $ID matches the sample names, and a phenotype of interest to distinguish individuals, as well as an output .png name.
 
