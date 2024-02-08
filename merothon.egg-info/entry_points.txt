@@ -1,0 +1,3 @@
+[console_scripts]
+calculate_r2 = merothon.Calculate_R2_LD_VCFs:main
+plot_genotypes = merothon.Plot_Genotypes:main

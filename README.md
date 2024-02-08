@@ -2,6 +2,16 @@
 
 Merothon is a collection of scripts designed for genetic data analysis, focusing on linkage disequilibrium calculations and genotype visualizations.
 
+Most of the basic dependencies you likely already have, but it is easily installable with a fresh environment and setup.py:
+
+```
+git clone https://github.com/merondun/merothon.git
+mamba create -n merothon python=3.8
+mamba activate merothon
+#cd merothon #or wherever the git repo was downloaded
+pip install -e .
+```
+
 ## Scripts
 
 ### Calculate_R2_LD_VCFs.py

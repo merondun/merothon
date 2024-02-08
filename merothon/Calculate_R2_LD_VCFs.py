@@ -54,14 +54,21 @@ def read_genotypes(vcf_path):
         snps.append((rec.chrom, rec.pos, genotypes, num_missing))
     return snps
 
-def main(vcf1, vcf2, out):
+def main():
     """
-    Main function to calculate LD between SNPs in two VCF files.
+    Main function adjusted to work as an entry point.
     """
-    snps_vcf1 = read_genotypes(vcf1)
-    snps_vcf2 = read_genotypes(vcf2)
+    parser = argparse.ArgumentParser(description='Calculate LD (R2) between all SNPs in two VCF files.')
+    parser.add_argument('--vcf1', help='Path to the first VCF file', required=True)
+    parser.add_argument('--vcf2', help='Path to the second VCF file', required=True)
+    parser.add_argument('--out', help='Path to the output file', required=True)
     
-    with open(out, 'w') as out_f:
+    args = parser.parse_args()
+    
+    snps_vcf1 = read_genotypes(args.vcf1)
+    snps_vcf2 = read_genotypes(args.vcf2)
+    
+    with open(args.out, 'w') as out_f:
         out_f.write("chrVCF1\tposVCF1\tchrVCF2\tposVCF2\tnum_missing_genotypesVCF1\tnum_missing_genotypesVCF2\tR2\n")
         for snp1 in snps_vcf1:
             for snp2 in snps_vcf2:
@@ -69,12 +76,4 @@ def main(vcf1, vcf2, out):
                 out_f.write(f"{snp1[0]}\t{snp1[1]}\t{snp2[0]}\t{snp2[1]}\t{snp1[3]}\t{snp2[3]}\t{r2}\n")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Calculate LD (R2) between all SNPs in two VCF files.')
-    parser.add_argument('--vcf1', help='Path to the first VCF file',required=True)
-    parser.add_argument('--vcf2', help='Path to the second VCF file',required=True)
-    parser.add_argument('--out', help='Path to the output file',required=True)
-    
-    args = parser.parse_args()
-    
-    main(args.vcf1, args.vcf2, args.out)
-
+    main()

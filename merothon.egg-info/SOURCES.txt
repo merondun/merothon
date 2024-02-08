@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+merothon.egg-info/PKG-INFO
+merothon.egg-info/SOURCES.txt
+merothon.egg-info/dependency_links.txt
+merothon.egg-info/entry_points.txt
+merothon.egg-info/requires.txt
+merothon.egg-info/top_level.txt
