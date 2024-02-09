@@ -49,7 +49,7 @@ Plots color-coded genotypes for SNP positions.
 
 **INPUTS:**
 
-Metadata (ID matches VCF sample IDS, any column (interpreted as string) to order individuals according to a phenotype). 
+Metadata with header (ID matches VCF sample IDS, any column (interpreted as string) to order individuals according to a phenotype). 
 
 ```
 head Egg_Metadata.txt
@@ -58,7 +58,7 @@ ID      EggType
 006_CB_ATP_CHN_F        Immaculate
 ```
 
-Positions to map: 
+Positions to map (tab sep, NO HEADER): 
 
 ```
 head Genotype_Inspect_Positions.txt
@@ -80,7 +80,7 @@ Example from /examples/ directory: `plot_genotypes --vcf chr_MT_Biallelic_SNPs.v
 
 The command `bootstrap_sample` takes the difference of a value within a target region from the chromosomal background, *n* times.
 
-**INPUTS (tab sep):**
+**INPUTS (tab sep, NO HEADERS):**
 
 * 4 column bed-style file with chr, start, end, value - where value is the metric to bootstrap.
 
@@ -122,7 +122,7 @@ nad1    1.0559316337798261
 
 The command `permutation_test` first calculates the observed mean within a target region, and then performs *n* permutations where it samples an equal number of windows/sites within the target region from the remaining chromosomal background, shuffles the labels, and calculates the mean of each. Then it takes the difference between target$mean - background$mean, repeating this *n* times. 
 
-**INPUTS (tab sep):**
+**INPUTS (tab sep, NO HEADERS):**
 
 * 4 column bed-style file with chr, start, end, value - where value is the metric of interest for permutations .
 
