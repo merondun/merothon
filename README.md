@@ -1,6 +1,6 @@
-# merothon
+# merothon: daily runs with python
 
-merothon is a collection of scripts designed for genetic data analysis, focusing on linkage disequilibrium calculations and genotype visualizations.
+merothon is a collection of scripts designed for omic data, typically scripts I re-use frequently or are part of published papers.
 
 ## Table of Contents
 
