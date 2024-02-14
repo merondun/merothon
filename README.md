@@ -43,7 +43,7 @@ Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is s
 Example command (from `~/merothon/examples/`): 
 
 ```
-python ~/merondun/merothon/merothon/VCF_to_PCA.py  --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png --write
+vcf_to_pca --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png --write
 ```
 
 **OUTPUTS:**

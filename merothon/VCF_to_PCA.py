@@ -30,7 +30,7 @@ def perform_pca(vcf_path):
     return coords, samples, model
 
 def plot_pca(coords, metadata, phenotype_col, samples, output_file, label_ids, model):
-    fig, axs = plt.subplots(1, 2, figsize=(9, 5))  # Adjusted figure size
+    fig, axs = plt.subplots(1, 2, figsize=(8, 5))  # Adjusted figure size
 
     #Ensure metadata is filtered to match samples and phenotype categories
     metadata_filtered = metadata[metadata['ID'].isin(samples)]
