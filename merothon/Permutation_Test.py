@@ -14,7 +14,13 @@ def perform_permutation_test(all_data, region, permutations, seed=None):
     if seed is not None:
         np.random.seed(seed)
 
+    print(f"Permuting region: {region['name']}")
+
     target = all_data[all_data.apply(check_overlap, axis=1, args=(region,))]
+    if target.empty:
+        return None  #return NA if no overlaps 
+        print(f"No overlaps for region: {region['name']}")
+
     background = all_data[~all_data.apply(check_overlap, axis=1, args=(region,))]
     
     observed_mean_diff = target['value'].mean() - background['value'].mean()
@@ -45,9 +51,15 @@ def main():
     results = []
 
     for _, region in regions.iterrows():
-        observed_mean_diff, permutation_diffs, num_target_windows = perform_permutation_test(all_data, region, args.permutations, args.seed)
-        for perm_diff in permutation_diffs:
-            results.append({'name': region['name'], 'observed_difference': observed_mean_diff, 'permuted_difference': perm_diff, 'num_target_windows': num_target_windows})
+        result = perform_permutation_test(all_data, region, args.permutations, args.seed)
+        if result is None:
+            # Handle the case where no overlaps are found
+            print(f"No overlaps for region: {region['name']}")
+            results.append({'name': region['name'], 'observed_difference': 'NA', 'permuted_difference': 'NA', 'num_target_windows': 0})
+        else:
+            observed_mean_diff, permutation_diffs, num_target_windows = result
+            for perm_diff in permutation_diffs:
+                results.append({'name': region['name'], 'observed_difference': observed_mean_diff, 'permuted_difference': perm_diff, 'num_target_windows': num_target_windows})
 
     results_df = pd.DataFrame(results)
     results_df.to_csv(args.out, sep='\t', index=False)

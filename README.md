@@ -8,7 +8,6 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 - [Scripts](#scripts)
   - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
-  - [Genomic Background Bootstrap Sampling](#genomic-background-bootstrap-sampling)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
 
 ## Installation
@@ -76,48 +75,6 @@ Example from /examples/ directory: `plot_genotypes --vcf chr_MT_Biallelic_SNPs.v
 
 ![Example Plot](examples/Eggtype.png)
 
-### Genomic Background Bootstrap Sampling
-
-The command `bootstrap_sample` takes the difference of a value within a target region from the chromosomal background, *n* times.
-
-**INPUTS (tab sep, NO HEADERS):**
-
-* 4 column bed-style file with chr, start, end, value - where value is the metric to bootstrap.
-
-```
-head chr_MT_log2CNV.bed
-chr_MT  0       499     0.67175572519084
-chr_MT  500     999     1.40123456790123
-chr_MT  1000    1499    1.51666666666667
-```
-
-* 4 column bed-style file with the regions of interest, with chr, start, end, name - where each 'name' will be sampled *n* times.   
-
-```
-head chr_MT_Regions.bed
-chr_MT  2823    3776    nad1
-chr_MT  4025    5053    nad2
-chr_MT  5429    6961    cox1
-``` 
-
-Example from /examples/ directory: `bootstrap_sample --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Bootstraps.txt --events 10000 --seed 101`
-
-Simply outputs the region $name, followed by the difference between the sampling event (target$value - background$value). Window overlap is INCLUSIVE, so if the region overlaps the genomic coordinates at all, it will be included. For base-pair data, simply encode $end as $start. Set seed for reproducibility. 
-
-**OUTPUTS:**
-
-```
-head chr_MT_log2CNV_Bootstraps.txt
-name    difference
-nad1    0.8559393036678461
-nad1    0.82442748091603
-nad1    1.29146341463415
-nad1    -0.25465178096757013
-nad1    0.6697076894433099
-nad1    0.4207115079936601
-nad1    1.0559316337798261
-```
-
 ### Genomic Background Permutation Tests 
 
 The command `permutation_test` first calculates the observed mean within a target region, and then performs *n* permutations where it samples an equal number of windows/sites within the target region from the remaining chromosomal background, shuffles the labels, and calculates the mean of each. Then it takes the difference between target$mean - background$mean, repeating this *n* times. 
@@ -142,7 +99,7 @@ chr_MT  4025    5053    nad2
 chr_MT  5429    6961    cox1
 ```
 
-Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Permutations.txt --permutations 10000 --seed 101`
+Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Permutations.txt --permutations 1000 --seed 101`
 
 **OUTPUTS:**
 
@@ -151,12 +108,44 @@ Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.b
 ```
 head chr_MT_log2CNV_Permutations.txt
 name    observed_difference     permuted_difference     num_target_windows
-nad1    0.47178252726279357     -0.4249724771896157     3
-nad1    0.47178252726279357     -0.039267334628042105   3
-nad1    0.47178252726279357     0.03729247279701875     3
-nad1    0.47178252726279357     0.1692817454684601      3
-nad1    0.47178252726279357     0.43651826959357654     3
-nad1    0.47178252726279357     0.5655407357906946      3
-nad1    0.47178252726279357     -0.03926733462804188    3
-nad1    0.47178252726279357     0.5722156240092797      3
+nad1    0.47178252726279357     0.14945085444127315     3
+nad1    0.47178252726279357     0.26676949056649923     3
+nad1    0.47178252726279357     0.4328325777830311      3
+nad1    0.47178252726279357     -0.4311795501585062     3
+nad1    0.47178252726279357     0.0506551308381018      3
+nad1    0.47178252726279357     0.43651826959357676     3
+nad1    0.47178252726279357     0.16896713077478842     3
+nad1    0.47178252726279357     -0.30403482064694287    3
+nad1    0.47178252726279357     -0.06806538194288803    3
 ```
+
+Which can be plotted in R. You can assess significance based on how many permuted windows are above your observed value. Note potential adjustments due to 2-tailed tests:
+
+```
+library(tidyverse)
+perm = read_tsv('/dss/dsshome1/lxc07/di39dux/merondun/merothon/examples/chr_MT_log2CNV_Permutations.txt')
+
+#set p-threshold, and the number of tests performed for bonferonni correction 
+alpha = 0.05 
+num_tests = length(unique(perm$name))
+
+#grab observed values, and calculate significance 
+perm_results = perm %>%
+  group_by(name) %>%
+  summarize(
+    obs = observed_difference[1],
+    p_value = mean(abs(permuted_difference) >= abs(obs)),
+    is_significant = ifelse(p_value < (alpha / num_tests),'*','n.s.')
+  )
+
+#plot histogram by gene
+perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
+  geom_histogram()+
+  geom_vline(data=perm_results,aes(xintercept=obs),lty=2,col='blue')+ #add vertical lines 
+  geom_text(data=perm_results,aes(x=Inf,y=Inf,label=is_significant),vjust=1,hjust=1.2)+ #add significance label
+  facet_wrap(name~.,scales='free')+
+  theme_bw()
+```
+
+![Example Plot Permutations](examples/Permutation_Test.png)
+

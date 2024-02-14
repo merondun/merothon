@@ -1,5 +1,4 @@
 [console_scripts]
-bootstrap_sample = merothon.Bootstrap_Sample_Region:main
 calculate_r2 = merothon.Calculate_R2_LD_VCFs:main
 permutation_test = merothon.Permutation_Test:main
 plot_genotypes = merothon.Plot_Genotypes:main
