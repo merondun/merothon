@@ -181,7 +181,7 @@ Check output logic:
 
 ```
 bcftools view --samples-file Outgroups.list chr_MT_Polarized.vcf.gz.vcf.gz | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AA[\t%GT]\n'
-#CHR  POS REF ALT INFO/AA 386_CP_MBW_RUS_M  387_CP_MBW_RUS_F
+#CHR    POS    REF     ALT   INFO/AA 386_CP_MBW_RUS_M  387_CP_MBW_RUS_F
 chr_MT  691     G       A       A       1       1
 chr_MT  1498    T       C       C       1       1
 chr_MT  1912    T       C       T       0       0
