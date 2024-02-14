@@ -10,6 +10,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
   - [Assign Ancestral Allele](#assign-ancestral-allele)
+  - [Count Fasta Mutations](#count-fasta-mutations)
 
 ## Installation
 
@@ -200,4 +201,59 @@ chr_1   15306   G       A       U       0/1     1/1
 chr_1   22822   C       A       C       0/0     0/0
 chr_1   22843   T       C       C       1/1     ./.
 chr_1   23004   A       G       U       ./.     ./.
+```
+
+### Count Fasta Mutations
+
+The command `count_mutations` is a simple multi-sequence alignment fasta summary script. It takes as input an MSA in fasta format and a reference ID for an individual to use as a reference, and outputs the number of bases, the number of mutations between each individual and the reference, the number of Ns or gap characters (-) between each individual and reference, and the total number of polymorphic sites. 
+
+**INPUTS:**
+
+A multi-sequence alignment file in fasta format, and a reference ID. 
+
+Command from `/examples/`:
+
+```
+count_mutations --fasta chr_MT.fasta --reference 013_CC_GRW_HUN_F --out chr_MT.mutations.txt
+```
+
+**OUTPUTS:**
+
+```
+cat chr_MT.mutations.txt
+sequence_id     sequence_length num_mutations   num_N_and_gaps  num_polymorphic
+004_CB_ATP_CHN_F        21      3       2       8
+007_CB_ATP_CHN_F        21      3       0       8
+010_CC_RED_FIN_F        21      4       0       8
+013_CC_GRW_HUN_F        21      0       0       8
+016_CC_GRW_HUN_F        21      1       0       8
+202_CC_ORW_CHN_F        21      6       0       8
+259_CC_SRT_RUS_F        21      3       0       8
+260_CC_SRT_RUS_F        21      3       0       8
+261_CC_BFB_RUS_F        21      0       5       8
+269_CC_TBW_RUS_F        21      0       3       8
+270_CC_TBW_RUS_F        21      0       0       8
+```
+
+Check sequences manually:
+
+```
+#for reference:
+>013_CC_GRW_HUN_F
+CGATCAGCGCGTAAGCGGGAG
+
+#0 mutations
+>270_CC_TBW_RUS_F
+CGATCAGCGCGTAAGCGGGAG
+CGATCAGCGCGTAAGCGGGAG #ref
+
+#0 mutations, 3 gaps/Ns 
+>269_CC_TBW_RUS_F
+CGAT-ANCGCGTAAGCGGGAN
+CGATCAGCGCGTAAGCGGGAG #ref 
+
+#3 mutations, 2 gaps 
+>004_CB_ATP_CHN_F
+CGATCAGCGTGTTANCGNGCG
+CGATCAGCGCGTAAGCGGGAG #ref 
 ```

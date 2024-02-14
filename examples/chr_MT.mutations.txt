@@ -1,0 +1,12 @@
+sequence_id	sequence_length	num_mutations	num_N_and_gaps	num_polymorphic
+004_CB_ATP_CHN_F	21	3	2	8
+007_CB_ATP_CHN_F	21	3	0	8
+010_CC_RED_FIN_F	21	4	0	8
+013_CC_GRW_HUN_F	21	0	0	8
+016_CC_GRW_HUN_F	21	1	0	8
+202_CC_ORW_CHN_F	21	6	0	8
+259_CC_SRT_RUS_F	21	3	0	8
+260_CC_SRT_RUS_F	21	3	0	8
+261_CC_BFB_RUS_F	21	0	5	8
+269_CC_TBW_RUS_F	21	0	3	8
+270_CC_TBW_RUS_F	21	0	0	8

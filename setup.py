@@ -4,12 +4,15 @@ setup(
     name='merothon',
     version='0.1.0',
     packages=find_packages(),
+    description='Genomic utility scripts',
+    author='J Merondun',
     entry_points={
         'console_scripts': [
             'calculate_r2=merothon.Calculate_R2_LD_VCFs:main',
             'plot_genotypes=merothon.Plot_Genotypes:main',
             'permutation_test=merothon.Permutation_Test:main',
             'polarize_vcf=merothon.Assign_Ancestral_Allele:main',
+            'count_mutations=merothon.Calculate_Fasta_Mutations:main',
         ],
     },
     install_requires=[
@@ -17,8 +20,8 @@ setup(
         'pysam',
         'matplotlib',
 	'scipy',
+	'biopython',
 	'seaborn'
-        # Add other dependencies as needed
     ],
 )
 
