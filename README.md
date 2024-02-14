@@ -9,6 +9,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
   - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
+  - [Assign Ancestral Allele](#assign-ancestral-allele)
 
 ## Installation
 
@@ -149,3 +150,53 @@ perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
 
 ![Example Plot Permutations](examples/Permutation_Test.png)
 
+### Assign Ancestral Allele
+
+The command `polarize_vcf` assigns a vcf INFO/AA field to a vcf file (**must have index, e.g. bcftools index $vcf**). Simply provide a vcf, and output prefix (output will be gzipped), and a list of the outgroup samples, one per line. It works on haploid and diploid data. 
+
+Polarizing logic: 
+* If the outgroups are homozygous for an allele, assign that as the ancestral. 
+* If the outgroups are all heterozygous, assign as unknown (AA=U). 
+* If the outgroups are polymorphic (0/0 0/0 1/1), assign as unknown (AA=U).
+* If there is missing data, but at least 1 outgroup is monomorphic, assign that allele as ancestral.
+* If there is only missing data from the outgroups, assign as unknown (AA=U). 
+
+**INPUTS:**
+
+Index vcf file, prefix for output, and an outgroups file:
+
+```
+cat ~/merothon/examples/Outgroups.list 
+386_CP_MBW_RUS_M
+387_CP_MBW_RUS_F
+```
+
+Example command (ran within ~/merothon/examples):
+
+```
+polarize_vcf --vcf chr_MT_Unpolarized.vcf.gz --out chr_MT_Polarized.vcf.gz --outgroups Outgroups.list
+```
+
+Check output logic:
+
+```
+bcftools view --samples-file Outgroups.list chr_MT_Polarized.vcf.gz.vcf.gz | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AA[\t%GT]\n'
+chr_MT  691     G       A       A       1       1
+chr_MT  1498    T       C       C       1       1
+chr_MT  1912    T       C       T       0       0
+chr_MT  4132    C       T       T       1       1
+chr_MT  6139    C       T       U       .       .
+chr_MT  6166    T       C       U       .       .
+chr_MT  9864    A       G       U       .       .
+chr_MT  11242   C       T       U       0       1
+chr_MT  11406   C       T       C       .       0
+chr_MT  11426   T       C       U       .       .
+chr_MT  13029   T       C       C       1       1
+chr_MT  13857   T       C       T       .       0
+chr_MT  14037   A       G       U       .       .
+chr_1   4839    C       A       U       0/1     0/1
+chr_1   15306   G       A       U       0/1     1/1
+chr_1   22822   C       A       C       0/0     0/0
+chr_1   22843   T       C       C       1/1     ./.
+chr_1   23004   A       G       U       ./.     ./.
+```

@@ -9,6 +9,7 @@ setup(
             'calculate_r2=merothon.Calculate_R2_LD_VCFs:main',
             'plot_genotypes=merothon.Plot_Genotypes:main',
             'permutation_test=merothon.Permutation_Test:main',
+            'polarize_vcf=merothon.Assign_Ancestral_Allele:main',
         ],
     },
     install_requires=[
