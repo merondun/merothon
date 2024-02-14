@@ -152,7 +152,7 @@ perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
 
 ### Assign Ancestral Allele
 
-The command `polarize_vcf` assigns a vcf INFO/AA field to a vcf file (**must have index, e.g. bcftools index $vcf**). Simply provide a vcf, and output prefix (output will be gzipped), and a list of the outgroup samples, one per line. It works on haploid and diploid data. 
+The command `polarize_vcf` assigns a vcf INFO/AA field to a vcf (**must have index, e.g. bcftools index $vcf**). Simply provide a vcf, and output prefix (output will be gzipped), and a list of the outgroup samples, one per line. It works on haploid and diploid data. 
 
 Polarizing logic: 
 * If the outgroups are homozygous for an allele, assign that as the ancestral. 
@@ -163,7 +163,7 @@ Polarizing logic:
 
 **INPUTS:**
 
-Index vcf file, prefix for output, and an outgroups file:
+Indexed vcf, prefix for output, and an outgroups file:
 
 ```
 cat ~/merothon/examples/Outgroups.list 
@@ -181,6 +181,7 @@ Check output logic:
 
 ```
 bcftools view --samples-file Outgroups.list chr_MT_Polarized.vcf.gz.vcf.gz | bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%INFO/AA[\t%GT]\n'
+#CHR  POS REF ALT INFO/AA 386_CP_MBW_RUS_M  387_CP_MBW_RUS_F
 chr_MT  691     G       A       A       1       1
 chr_MT  1498    T       C       C       1       1
 chr_MT  1912    T       C       T       0       0
