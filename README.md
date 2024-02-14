@@ -123,7 +123,7 @@ Which can be plotted in R. You can assess significance based on how many permute
 
 ```
 library(tidyverse)
-perm = read_tsv('/dss/dsshome1/lxc07/di39dux/merondun/merothon/examples/chr_MT_log2CNV_Permutations.txt')
+perm = read_tsv('~/merothon/examples/chr_MT_log2CNV_Permutations.txt')
 
 #set p-threshold, and the number of tests performed for bonferonni correction 
 alpha = 0.05 
