@@ -15,13 +15,16 @@ def parse_arguments():
     return parser.parse_args()
 
 def read_population_map(metadata_file, phenotype_col):
+    print(f"Reading population map from {metadata_file}...")
     df = pd.read_csv(metadata_file, sep='\t')
     df[phenotype_col] = df[phenotype_col].astype('category')
     return df
 
 def perform_pca(vcf_path):
+    print(f"Reading VCF data from {vcf_path}...")
     callset = allel.read_vcf(vcf_path)
     samples = callset['samples']
+    print("Performing PCA analysis...")
     gt = allel.GenotypeArray(callset['calldata/GT'])
     ac = gt.count_alleles()
     flt = ac.is_segregating() & (ac.max_allele() == 1)
@@ -30,6 +33,7 @@ def perform_pca(vcf_path):
     return coords, samples, model
 
 def plot_pca(coords, metadata, phenotype_col, samples, output_file, label_ids, model):
+    print("Plotting PCA results...")
     fig, axs = plt.subplots(1, 2, figsize=(8, 5))  # Adjusted figure size
 
     #Ensure metadata is filtered to match samples and phenotype categories
@@ -80,6 +84,7 @@ def write_pca_results(coords, metadata, phenotype_col, samples, prefix):
 
     #Write the DataFrame to a txt file 
     pca_results.to_csv(f"{prefix}_PCA_results.txt",sep='\t', index=False)
+    print(f"PCA results written to {prefix}_PCA_results.txt.")
 
 def main():
     args = parse_arguments()

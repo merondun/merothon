@@ -33,7 +33,7 @@ Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is s
 
 **INPUTS:**
 
-* --vcf VCF file, gzipped.
+* --vcf VCF file, gzipped. Runs quite fast - on 325K SNps with n=95 finished in less than 2 minutes. 
 * --metadata Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
 * --phenotype Indicates column from the metadata to color PCA points with 
 * --out Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf. 
@@ -68,7 +68,11 @@ Calculates LD (R2) between the SNP genotypes in 2 VCF files. This is useful for 
 
 NOTE: This only works correctly for biallelic SNPs. It works for variable ploidy (same output as plink --ld-window 999999999 --ld-window-kb 100000000 --ld-window-r2 0), but it won't output meaingful results for 3N, 4N sites. 
 
-Example from /examples/ directory: `calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vcf.gz --vcf2 chr_MT_Target_SNP.vcf.gz --out chr_MT_LD.txt`
+Example from /examples/ directory: 
+
+```
+calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vcf.gz --vcf2 chr_MT_Target_SNP.vcf.gz --out chr_MT_LD.txt
+```
 
 If you have any invariant or constant sites in your VCF, you will get a warning "ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.", but it does not affect calculations for other sites (output will be nan). 
 
@@ -107,7 +111,11 @@ chr_MT  15769
 
 ... vcf, column name for the phenotype to order, output name for png, 
 
-Example from /examples/ directory: `plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --pos Genotype_Inspect_Positions.txt --phenotype EggType --out Eggtype.png --size 50`
+Example from /examples/ directory:
+
+```
+plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --pos Genotype_Inspect_Positions.txt --phenotype EggType --out Eggtype.png --size 50
+```
 
 **OUTPUT:**
 
@@ -200,7 +208,7 @@ Polarizing logic:
 
 **INPUTS:**
 
-Indexed vcf, prefix for output, and an outgroups file:
+Indexed vcf, prefix for output (output will be gzipped with .vcf.gz added), and an outgroups file:
 
 ```
 cat ~/merothon/examples/Outgroups.list 
@@ -211,7 +219,7 @@ cat ~/merothon/examples/Outgroups.list
 Example command (ran within ~/merothon/examples):
 
 ```
-polarize_vcf --vcf chr_MT_Unpolarized.vcf.gz --out chr_MT_Polarized.vcf.gz --outgroups Outgroups.list
+polarize_vcf --vcf chr_MT_Unpolarized.vcf.gz --out chr_MT_Polarized --outgroups Outgroups.list
 ```
 
 Check output logic:
