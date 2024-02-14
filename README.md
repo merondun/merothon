@@ -6,6 +6,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 
 - [Installation](#installation)
 - [Scripts](#scripts)
+  - [VCF to PCA](#vcf-to-pca)
   - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
@@ -25,6 +26,26 @@ pip install -e .
 ```
 
 ## Scripts
+
+### VCF to PCA
+
+Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is standard, as implemented with `scikit-allel`. Shows axes 1-4 with variation explained. Color-coded by a metadata file and a specified population / phenotype of interest. 
+
+**INPUTS:**
+
+* --vcf VCF file, gzipped.
+* --metadata Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
+* --phenotype Indicates column from the metadata to color PCA points with 
+* --out Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf. 
+* --label optional argument, if you want to add individual ID labels on the PCA.
+* --write optional argument, write a txt output with $ID, $Phenotype, and PC axes 1-4 so you can plot yourself. 
+
+Example command (from `~/merothon/examples/`): 
+
+```
+python ~/merondun/merothon/merothon/VCF_to_PCA.py  --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png --write
+```
+![PCA](examples/chr_MT-Egg.png)
 
 ### Calculating R2 All SNPs, 2 VCFS
 

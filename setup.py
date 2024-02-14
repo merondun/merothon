@@ -8,6 +8,7 @@ setup(
     author='J Merondun',
     entry_points={
         'console_scripts': [
+            'vcf_to_pca=merothon.VCF_to_PCA:main',
             'calculate_r2=merothon.Calculate_R2_LD_VCFs:main',
             'plot_genotypes=merothon.Plot_Genotypes:main',
             'permutation_test=merothon.Permutation_Test:main',
@@ -20,6 +21,7 @@ setup(
         'pysam',
         'matplotlib',
 	'scipy',
+	'scikit-allel',
 	'biopython',
 	'seaborn'
     ],

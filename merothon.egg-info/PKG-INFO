@@ -8,5 +8,6 @@ Requires-Dist: pandas
 Requires-Dist: pysam
 Requires-Dist: matplotlib
 Requires-Dist: scipy
+Requires-Dist: scikit-allel
 Requires-Dist: biopython
 Requires-Dist: seaborn

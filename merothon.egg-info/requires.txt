@@ -2,5 +2,6 @@ pandas
 pysam
 matplotlib
 scipy
+scikit-allel
 biopython
 seaborn
