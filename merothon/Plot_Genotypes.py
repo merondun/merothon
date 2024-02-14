@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def main():
-    # Set up argument parsing inside the main function
+    #arguments 
     parser = argparse.ArgumentParser(description='Plot genotypes by position and phenotype.')
     parser.add_argument('--vcf', help='Path to the VCF file', required=True)
     parser.add_argument('--metadata', help='Path to the metadata file', required=True)
@@ -22,7 +22,7 @@ def main():
     positions_of_interest = [tuple(x) for x in positions_of_interest.to_numpy()]
 
     # Read metadata
-    metadata = pd.read_csv(args.metadata, sep='\t')  # Assuming metadata is also tab-separated
+    metadata = pd.read_csv(args.metadata, sep='\t')  #metadata tab sep! 
 
     # Extract genotypes
     genotypes = extract_genotypes(args.vcf, positions_of_interest)
@@ -56,7 +56,7 @@ def main():
     plt.savefig(args.out)
     plt.close()
 
-# Function to extract genotypes for positions of interest remains unchanged
+#Function to extract genotypes for positions of interest remains unchanged
 def extract_genotypes(vcf, positions):
     vcf = pysam.VariantFile(vcf)
     records = []

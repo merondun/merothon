@@ -40,7 +40,7 @@ def calculate_r2(genotypes1, genotypes2):
         r, _ = pearsonr(g1[~np.isnan(g1) & ~np.isnan(g2)], g2[~np.isnan(g1) & ~np.isnan(g2)])
         return r**2
     except ConstantInputWarning:
-        return np.nan  # Handle the warning gracefully
+        return np.nan  #return nas 
 
 def read_genotypes(vcf_path):
     """

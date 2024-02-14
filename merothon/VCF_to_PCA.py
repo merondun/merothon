@@ -26,13 +26,13 @@ def perform_pca(vcf_path):
     ac = gt.count_alleles()
     flt = ac.is_segregating() & (ac.max_allele() == 1)
     gf = gt.compress(flt, axis=0).to_n_alt()
-    coords, model = allel.pca(gf, n_components=4, scaler='patterson')  # Compute 4 components
+    coords, model = allel.pca(gf, n_components=4, scaler='patterson')  #compute 4 components, modify if you want 
     return coords, samples, model
 
 def plot_pca(coords, metadata, phenotype_col, samples, output_file, label_ids, model):
     fig, axs = plt.subplots(1, 2, figsize=(9, 5))  # Adjusted figure size
 
-    # Ensure metadata is filtered to match samples and phenotype categories
+    #Ensure metadata is filtered to match samples and phenotype categories
     metadata_filtered = metadata[metadata['ID'].isin(samples)]
     metadata_filtered = metadata_filtered.set_index('ID').loc[samples].reset_index()
     metadata_filtered[phenotype_col] = pd.Categorical(metadata_filtered[phenotype_col])
@@ -54,12 +54,12 @@ def plot_pca(coords, metadata, phenotype_col, samples, output_file, label_ids, m
         ax.set_xlabel(f'PC{pcs[0]+1}: {model.explained_variance_ratio_[pcs[0]]*100:.2f}%')
         ax.set_ylabel(f'PC{pcs[1]+1}: {model.explained_variance_ratio_[pcs[1]]*100:.2f}%')
 
-    # Adjust legend placement and figure layout
+    #Adjust legend placement and figure layout
     handles, labels = axs[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, 0.1), fancybox=True, shadow=True, ncol=3, fontsize='small')
     plt.suptitle('PCA by Phenotype')
     
-    # Adjust layout to make space for the legend outside the subplots
+    #adjust layout to make space for the legend outside the subplots
     plt.tight_layout(rect=[0, 0.1, 1, 0.95])  # Adjust the bottom parameter to accommodate the legend
     plt.savefig(output_file, format=output_file.split('.')[-1])
 
@@ -78,7 +78,7 @@ def write_pca_results(coords, metadata, phenotype_col, samples, prefix):
         'PC4': coords[:, 3]
     })
 
-    # Write the DataFrame to a CSV file
+    #Write the DataFrame to a txt file 
     pca_results.to_csv(f"{prefix}_PCA_results.txt",sep='\t', index=False)
 
 def main():
@@ -87,7 +87,6 @@ def main():
     coords, samples, model = perform_pca(args.vcf)
     plot_pca(coords, metadata, args.phenotype, samples, args.out, args.label, model)
     if args.write:
-        # Adjusted to include necessary data for the new output format
         write_pca_results(coords, metadata, args.phenotype, samples, args.out.rsplit('.', 1)[0])
 
 if __name__ == '__main__':

@@ -53,7 +53,7 @@ def main():
     for _, region in regions.iterrows():
         result = perform_permutation_test(all_data, region, args.permutations, args.seed)
         if result is None:
-            # Handle the case where no overlaps are found
+            # Handle the case where no overlaps are found, for exmple if chr not in file 
             print(f"No overlaps for region: {region['name']}")
             results.append({'name': region['name'], 'observed_difference': 'NA', 'permuted_difference': 'NA', 'num_target_windows': 0})
         else:

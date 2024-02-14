@@ -45,7 +45,22 @@ Example command (from `~/merothon/examples/`):
 ```
 python ~/merondun/merothon/merothon/VCF_to_PCA.py  --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png --write
 ```
+
+**OUTPUTS:**
+
 ![PCA](examples/chr_MT-Egg.png)
+
+If `--write` is specified, a txt file with the vectors will also be saved:
+
+```
+head chr_MT-Egg_PCA_results.txt
+ID      EggType PC1     PC2     PC3     PC4
+004_CB_ATP_CHN_F        Immaculate      -32.053032      2.9825137       27.599659       0.3857217
+006_CB_ATP_CHN_F        Immaculate      -34.71451       5.0182424       37.388523       0.21636803
+007_CB_ATP_CHN_F        Immaculate      -27.910244      2.1165054       18.682531       0.19745003
+010_CC_RED_FIN_F        Immaculate      -20.966307      0.060952943     11.145772       2.2917793
+013_CC_GRW_HUN_F        SpottedWest     21.225214       -8.073826       3.522668        -4.487747
+```
 
 ### Calculating R2 All SNPs, 2 VCFS
 

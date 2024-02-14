@@ -26,15 +26,15 @@ def analyze_record(record, outgroup_samples):
     alleles = []
     for sample in outgroup_samples:
         genotype = record.samples[sample]['GT']
-        # Check if genotype is not None and then proceed
+        #check if genotype is not None and then proceed
         if genotype is None or len(genotype) == 0:
-            # Skip if genotype is None or empty
+            #skip site genotype is None or empty
             continue
         # Adjust handling for haploid genotypes
         if len(genotype) == 1 or genotype[1] is None:  # Haploid or missing second allele
             allele_index = genotype[0]
         else:
-            # If the genotype is missing or heterozygous in diploid, skip this sample
+            #if the genotype is missing or heterozygous in diploid, skip this sample
             if genotype.count(None) > 1 or set(genotype) == {0, 1}:
                 alleles = []
                 break
@@ -44,7 +44,7 @@ def analyze_record(record, outgroup_samples):
             allele = record.alleles[allele_index]
             alleles.append(allele)
         else:
-            # Handle cases where allele_index is None (shouldn't happen with the above checks, but just in case)
+            #Handle cases where allele_index is None (shouldn't happen with the above checks, but just in case)
             continue
 
     if len(set(alleles)) > 1 or len(alleles) == 0:
