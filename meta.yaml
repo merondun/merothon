@@ -1,6 +1,6 @@
 package:
   name: merothon
-  version: "0.2.0"
+  version: "0.3.0"
 
 source:
   git_url: https://github.com/merondun/merothon.git
@@ -10,10 +10,10 @@ build:
   script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
   entry_points:
     - vcf_to_pca=merothon.VCF_to_PCA:main
-    - calculate_r2=merothon.Calculate_R2_LD_VCFs:main
     - plot_genotypes=merothon.Plot_Genotypes:main
     - permutation_test=merothon.Permutation_Test:main
     - polarize_vcf=merothon.Assign_Ancestral_Allele:main
+    - calculate_r2=merothon.Calculate_R2_LD_VCFs:main
     - count_mutations=merothon.Calculate_Fasta_Mutations:main
 
 requirements:
@@ -29,7 +29,6 @@ requirements:
     - scipy
     - scikit-allel
     - biopython
-    - seaborn
 
 test:
   imports:

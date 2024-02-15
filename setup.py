@@ -24,7 +24,6 @@ setup(
 	'numpy',
 	'scikit-allel',
 	'biopython',
-	'seaborn'
     ],
 )
 

@@ -7,10 +7,10 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 - [Installation](#installation)
 - [Scripts](#scripts)
   - [VCF to PCA](#vcf-to-pca)
-  - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
   - [Assign Ancestral Allele](#assign-ancestral-allele)
+  - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Count Fasta Mutations](#count-fasta-mutations)
 
 ## Installation
@@ -33,11 +33,11 @@ Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is s
 
 **INPUTS:**
 
-* --vcf VCF file, gzipped. Runs quite fast - on 325K SNps with n=95 finished in less than 2 minutes. 
-* --out Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf.
-* --metadata optional, Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
-* --phenotype optional (required if --metadata passed) Indicates column from the metadata to color PCA points with  
-* --label optional, if you want to add individual ID labels on the PCA.
+* `--vcf` VCF file, gzipped. Runs quite fast - on 325K SNps with n=95 finished in less than 2 minutes. 
+* `--out` Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf.
+* `--metadata` optional, Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
+* `--phenotype` optional (required if --metadata passed) Indicates column from the metadata to color PCA points with  
+* `--label` optional, if you want to add individual ID labels on the PCA.
 
 Example command (from `~/merothon/examples/`): 
 
@@ -74,28 +74,6 @@ PC3     0.08608831
 PC4     0.064572975
 ``` 
 
-### Calculating R2 All SNPs, 2 VCFS
-
-Calculates LD (R2) between the SNP genotypes in 2 VCF files. This is useful for estimating LD for e.g. a mtDNA variant and the rest of the autosomal SNPs. 
-
-NOTE: This only works correctly for biallelic SNPs. It works for variable ploidy (same output as plink --ld-window 999999999 --ld-window-kb 100000000 --ld-window-r2 0), but it won't output meaingful results for 3N, 4N sites. 
-
-Example from /examples/ directory: 
-
-```
-calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vcf.gz --vcf2 chr_MT_Target_SNP.vcf.gz --out chr_MT_LD.txt
-```
-
-If you have any invariant or constant sites in your VCF, you will get a warning "ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.", but it does not affect calculations for other sites (output will be nan). 
-
-**OUTPUTS:**
-
-| chrVCF1 | posVCF1 | chrVCF2 | posVCF2 | num_missing_genotypesVCF1 | num_missing_genotypesVCF2 | R2                         |
-|---------|---------|---------|---------|---------------------------|---------------------------|----------------------------|
-| chr_MT  | 44      | chr_MT  | 4270    | 0                         | 0                         | 0.3048275862068961         |
-| chr_MT  | 192     | chr_MT  | 4270    | 0                         | 0                         | 0.20816783216783216        |
-| chr_MT  | 196     | chr_MT  | 4270    | 0                         | 0                         | 0.19325217121588079        |
-
 ### Plot Genotypes from VCF
 
 Plots color-coded genotypes for SNP positions. 
@@ -111,22 +89,16 @@ ID      EggType
 006_CB_ATP_CHN_F        Immaculate
 ```
 
-Positions to map (tab sep, NO HEADER): 
-
-```
-head Genotype_Inspect_Positions.txt
-chr_MT  4270
-chr_MT  6295
-chr_MT  15204
-chr_MT  15769
-```
-
-... vcf, column name for the phenotype to order, output name for png, 
+* `--metadata` sheet (above)
+* `--vcf` (gzipped, indexed)
+* `--pos` list of positions, separated by comma (chr_MT:4270,1:2370)
+* `--phenotype` phenotype to order by, column from metadata sheet
+* `--out` output png. 
 
 Example from /examples/ directory:
 
 ```
-plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --pos Genotype_Inspect_Positions.txt --phenotype EggType --out Eggtype.png --size 50
+plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --pos chr_MT:19485,chr_MT:4270,chr_MT:4646 --phenotype EggType --out Eggtype.png
 ```
 
 **OUTPUT:**
@@ -156,6 +128,11 @@ chr_MT  2823    3776    nad1
 chr_MT  4025    5053    nad2
 chr_MT  5429    6961    cox1
 ```
+
+* `--all_data` file with all the data to permute, format above 
+* `--regions` file with the regions
+* `--out` output file
+* `--permutation` number of permutations
 
 Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.bed --regions chr_MT_Regions.bed --out chr_MT_log2CNV_Permutations.txt --permutations 1000 --seed 101`
 
@@ -220,13 +197,15 @@ Polarizing logic:
 
 **INPUTS:**
 
-Indexed vcf, prefix for output (output will be gzipped with .vcf.gz added), and an outgroups file:
-
 ```
 cat ~/merothon/examples/Outgroups.list 
 386_CP_MBW_RUS_M
 387_CP_MBW_RUS_F
 ```
+
+* `--vcf` vcf
+* `--out` output prefix (will be gzipped)
+* `--outgroups` list of outgroup samples, one per line
 
 Example command (ran within ~/merothon/examples):
 
@@ -259,13 +238,43 @@ chr_1   22843   T       C       C       1/1     ./.
 chr_1   23004   A       G       U       ./.     ./.
 ```
 
+
+### Calculating R2 All SNPs, 2 VCFS
+
+Calculates LD (R2) between the SNP genotypes in 2 VCF files. This is useful for estimating LD for e.g. a mtDNA variant and the rest of the autosomal SNPs. 
+
+NOTE: This only works correctly for biallelic SNPs. It works for variable ploidy (same output as plink --ld-window 999999999 --ld-window-kb 100000000 --ld-window-r2 0), but it won't output meaingful results for 3N, 4N sites. 
+
+**INPUTS:**
+
+* `--vcf1` first VCF
+* `--vcf2` second VCF 
+* `--out` output file 
+
+```
+calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vcf.gz --vcf2 chr_MT_Target_SNP.vcf.gz --out chr_MT_LD.txt
+```
+
+If you have any invariant or constant sites in your VCF, you will get a warning "ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.", but it does not affect calculations for other sites (output will be nan). 
+
+**OUTPUTS:**
+
+| chrVCF1 | posVCF1 | chrVCF2 | posVCF2 | num_missing_genotypesVCF1 | num_missing_genotypesVCF2 | R2                         |
+|---------|---------|---------|---------|---------------------------|---------------------------|----------------------------|
+| chr_MT  | 44      | chr_MT  | 4270    | 0                         | 0                         | 0.3048275862068961         |
+| chr_MT  | 192     | chr_MT  | 4270    | 0                         | 0                         | 0.20816783216783216        |
+| chr_MT  | 196     | chr_MT  | 4270    | 0                         | 0                         | 0.19325217121588079        |
+
+
 ### Count Fasta Mutations
 
 The command `count_mutations` is a simple multi-sequence alignment fasta summary script. It takes as input an MSA in fasta format and a reference ID for an individual to use as a reference, and outputs the number of bases, the number of mutations between each individual and the reference, the number of Ns or gap characters (-) between each individual and reference, and the total number of polymorphic sites. 
 
 **INPUTS:**
 
-A multi-sequence alignment file in fasta format, and a reference ID. 
+* `--fasta` fasta multisequence alignment
+* `--reference` individual ID from fasta to compare against all other sequences
+* `--out` output summary 
 
 Command from `/examples/`:
 

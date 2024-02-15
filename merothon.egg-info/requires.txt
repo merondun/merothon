@@ -5,4 +5,3 @@ scipy
 numpy
 scikit-allel
 biopython
-seaborn
