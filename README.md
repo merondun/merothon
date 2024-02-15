@@ -34,23 +34,22 @@ Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is s
 **INPUTS:**
 
 * --vcf VCF file, gzipped. Runs quite fast - on 325K SNps with n=95 finished in less than 2 minutes. 
-* --metadata Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
-* --phenotype Indicates column from the metadata to color PCA points with 
-* --out Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf. 
-* --label optional argument, if you want to add individual ID labels on the PCA.
-* --write optional argument, write a txt output with $ID, $Phenotype, and PC axes 1-4 so you can plot yourself. 
+* --out Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf.
+* --metadata optional, Metadata txt file with header (tab sep, ID matches VCF sample IDS, any column (interpreted as string) to color individuals according to a phenotype). 
+* --phenotype optional (required if --metadata passed) Indicates column from the metadata to color PCA points with  
+* --label optional, if you want to add individual ID labels on the PCA.
 
 Example command (from `~/merothon/examples/`): 
 
 ```
-vcf_to_pca --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png --write
+vcf_to_pca --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --phenotype EggType --out chr_MT-Egg.png
 ```
 
 **OUTPUTS:**
 
 ![PCA](examples/chr_MT-Egg.png)
 
-If `--write` is specified, a txt file with the vectors will also be saved:
+The script will also output a table with the ID and PC scores: 
 
 ```
 head chr_MT-Egg_PCA_results.txt
@@ -61,6 +60,17 @@ ID      EggType PC1     PC2     PC3     PC4
 010_CC_RED_FIN_F        Immaculate      -20.966307      0.060952943     11.145772       2.2917793
 013_CC_GRW_HUN_F        SpottedWest     21.225214       -8.073826       3.522668        -4.487747
 ```
+
+And a txt with the percent variation explained: 
+
+```
+cat chr_MT-Egg_values.txt
+PC      Explained Variance
+PC1     0.31688836
+PC2     0.09920925
+PC3     0.08608831
+PC4     0.064572975
+``` 
 
 ### Calculating R2 All SNPs, 2 VCFS
 

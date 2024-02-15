@@ -1,6 +1,13 @@
 LICENSE
 README.md
 setup.py
+merothon/Assign_Ancestral_Allele.py
+merothon/Calculate_Fasta_Mutations.py
+merothon/Calculate_R2_LD_VCFs.py
+merothon/Permutation_Test.py
+merothon/Plot_Genotypes.py
+merothon/VCF_to_PCA.py
+merothon/__init__.py
 merothon.egg-info/PKG-INFO
 merothon.egg-info/SOURCES.txt
 merothon.egg-info/dependency_links.txt

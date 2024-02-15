@@ -21,6 +21,7 @@ setup(
         'pysam',
         'matplotlib',
 	'scipy',
+	'numpy',
 	'scikit-allel',
 	'biopython',
 	'seaborn'

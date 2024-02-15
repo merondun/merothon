@@ -1,0 +1,47 @@
+package:
+  name: merothon
+  version: "0.1.0"
+
+source:
+  git_url: https://github.com/merondun/merothon.git
+
+build:
+  noarch: python
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv"
+  entry_points:
+    - vcf_to_pca=merothon.VCF_to_PCA:main
+    - calculate_r2=merothon.Calculate_R2_LD_VCFs:main
+    - plot_genotypes=merothon.Plot_Genotypes:main
+    - permutation_test=merothon.Permutation_Test:main
+    - polarize_vcf=merothon.Assign_Ancestral_Allele:main
+    - count_mutations=merothon.Calculate_Fasta_Mutations:main
+
+requirements:
+  host:
+    - python >=3.6
+    - pip
+  run:
+    - python >=3.6
+    - pandas
+    - numpy
+    - pysam
+    - matplotlib
+    - scipy
+    - scikit-allel
+    - biopython
+    - seaborn
+
+test:
+  imports:
+    - merothon
+
+about:
+  home: https://github.com/merondun/merothon
+  license: GPL3.0
+  summary: 'Genomic utility scripts for various analyses.'
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - merondun
+
