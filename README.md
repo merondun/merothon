@@ -22,7 +22,7 @@ git clone https://github.com/merondun/merothon.git
 mamba create -n merothon python=3.8
 mamba activate merothon
 #cd merothon #or wherever the git repo was downloaded
-pip install -e .
+pip install .
 ```
 
 ## Scripts
