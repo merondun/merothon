@@ -15,7 +15,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 
 ## Installation
 
-Installation is easiest with conda (or preferably mamba..!):
+Installation (only unix tested) is easiest with conda (or preferably mamba..!):
 
 ```
 conda config --add channels merothon
@@ -31,6 +31,10 @@ mamba activate merothon
 #cd merothon #or wherever the git repo was downloaded
 pip install .
 ```
+
+## Contact
+
+For any questions or concerns, please open an issue on this repository or reach out to me (Justin Merondun): heritabilities@gmail.com
 
 ## Scripts
 
