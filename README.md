@@ -15,7 +15,14 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 
 ## Installation
 
-Most of the basic dependencies you likely already have, but it is easily installable with a fresh environment and setup.py:
+Installation is easiest with conda (or preferably mamba..!):
+
+```
+conda config --add channels merothon
+conda create -n merothon merothon
+```
+
+The package requires scikit-allel, so there are quite some dependencies. also installable with a fresh environment and setup.py:
 
 ```
 git clone https://github.com/merondun/merothon.git
