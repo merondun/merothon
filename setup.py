@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='merothon',
-    version='0.3.0',
+    version='0.4.0',
     packages=find_packages(),
     description='Genomic utility scripts',
     author='J Merondun',
@@ -14,6 +14,7 @@ setup(
             'permutation_test=merothon.Permutation_Test:main',
             'polarize_vcf=merothon.Assign_Ancestral_Allele:main',
             'count_mutations=merothon.Calculate_Fasta_Mutations:main',
+            'map_chromosomes=merothon.Reference_to_Scaffold_ChrID:main',
         ],
     },
     install_requires=[

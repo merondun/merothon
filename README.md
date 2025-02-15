@@ -7,6 +7,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 - [Installation](#installation)
 - [Scripts](#scripts)
   - [VCF to PCA](#vcf-to-pca)
+  - [Identify Chromosomes in Scaffold Assembly](#identify-chromosomes-in-scaffold-assembly)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
   - [Assign Ancestral Allele](#assign-ancestral-allele)
@@ -16,6 +17,17 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 ## Installation
 
 Installation (only unix tested) is easiest with conda (or preferably mamba..!):
+
+For newest version, it's best to just pull and install with pip:
+
+```
+git clone git@github.com:merondun/merothon.git
+cd merothon
+pip install -e .
+map_chromosomes -h 
+```
+
+With conda (`v0.3.0`)
 
 ```
 conda config --add channels merothon
@@ -84,6 +96,28 @@ PC2     0.09920925
 PC3     0.08608831
 PC4     0.064572975
 ``` 
+
+### Identify Chromosomes in Scaffold Assembly
+
+Using 
+
+```
+minimap2 -x asm20 ${REFERENCE_FASTA} draft.fa --secondary=no -t ${THREADS} -o ref_to_asm.paf
+samtools faidx draft.fa
+
+map_chromosomes ref_to_asm.paf draft.fa.fai draft_chromosomes.txt
+```
+
+**INPUTS:**
+
+* `--paf` PAF alignment file between chromosome-level reference and draft assembly.
+* `--fai` Samtools index file. 
+* `--min_size` Minimum scaffold size, in Mb.  
+* `--out` outfile.
+
+
+**OUTPUTS:**
+
 
 ### Plot Genotypes from VCF
 

@@ -1,6 +1,6 @@
 package:
   name: merothon
-  version: "0.3.0"
+  version: "0.4.0"
 
 source:
   git_url: https://github.com/merondun/merothon.git
@@ -15,6 +15,7 @@ build:
     - polarize_vcf=merothon.Assign_Ancestral_Allele:main
     - calculate_r2=merothon.Calculate_R2_LD_VCFs:main
     - count_mutations=merothon.Calculate_Fasta_Mutations:main
+    - map_chromosomes=merothon.Reference_to_Scaffold_ChrID:main
 
 requirements:
   host:

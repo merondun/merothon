@@ -1,6 +1,7 @@
 [console_scripts]
 calculate_r2 = merothon.Calculate_R2_LD_VCFs:main
 count_mutations = merothon.Calculate_Fasta_Mutations:main
+map_chromosomes = merothon.Reference_to_Scaffold_ChrID:main
 permutation_test = merothon.Permutation_Test:main
 plot_genotypes = merothon.Plot_Genotypes:main
 polarize_vcf = merothon.Assign_Ancestral_Allele:main
