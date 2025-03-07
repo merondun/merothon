@@ -7,6 +7,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 - [Installation](#installation)
 - [Scripts](#scripts)
   - [VCF to PCA](#vcf-to-pca)
+  - [Plot LD](#plot-ld)
   - [Identify Chromosomes in Scaffold Assembly](#identify-chromosomes-in-scaffold-assembly)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
@@ -96,6 +97,54 @@ PC2     0.09920925
 PC3     0.08608831
 PC4     0.064572975
 ``` 
+
+### Plot LD
+
+Simple script to visualize LD. Runs in about 1 minute with low memory on a plink output up to 70K SNPs (28M comparisons; ~2 Gb plink `.ld` file). It will likely require higher RAM for whole-chromosome plots. 
+
+Plink LD file can be created like:
+
+```
+plink --allow-extra-chr --double-id --vcf chr_6.vcf.gz --r2 --out chr_6 --ld-window 999999999 --ld-window-kb 1000000000
+```
+
+**INPUTS:**
+
+* `--input` PLINK LD file. 
+* `--out` Name for the output plot. Indicate .png if you want png, or .pdf if you want pdf.
+* `--win_size` Window size in KB to average LD within. Recommended 5 / 10 KB.  
+* `--highlight` optional, will highlight region specified `--highlight 4000-7500`
+
+Input file should look like this:
+
+```
+CHR_A         BP_A SNP_A  CHR_B         BP_B SNP_B           R2
+ chr_6     26782411    .  chr_6     26782682    .     0.431694
+ chr_6     26782411    .  chr_6     26783389    .     0.415234
+ chr_6     26782411    .  chr_6     26783390    .     0.415234
+```
+
+Example command (from `~/merothon/examples/`): 
+
+```
+plot_ld --input inversion/chr_6_LD.ld --out chr_6.png --win_size 10 --highlight 29890958-31208777
+```
+
+**OUTPUTS:**
+
+![LD](examples/chr_6.png)
+
+The script will also output a table with mean LD in the specified windows: 
+
+```
+head chr_6.png_windows.txt
+BP_A_bin        BP_B_bin        R2
+27890000        27890000        0.49573512930011865
+27890000        27900000        0.41180526204340917
+27890000        27910000        0.30092458594917787
+27890000        27920000        0.2833754210526316
+27890000        27930000        0.34322271005154636
+```
 
 ### Identify Chromosomes in Scaffold Assembly
 
