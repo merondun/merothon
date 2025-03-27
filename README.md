@@ -98,6 +98,8 @@ PC3     0.08608831
 PC4     0.064572975
 ``` 
 
+---
+
 ### Plot LD
 
 Simple script to visualize LD. Runs in about 1 minute with low memory on a plink output up to 70K SNPs (28M comparisons; ~2 Gb plink `.ld` file). It will likely require higher RAM for whole-chromosome plots. 
