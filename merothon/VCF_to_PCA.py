@@ -74,7 +74,7 @@ def write_pca_results(coords, samples, model, prefix):
     pca_scores.to_csv(f"{prefix}_scores.txt", sep='\t', index_label='SampleID')
 
     explained_variance = pd.Series(model.explained_variance_ratio_, index=['PC1', 'PC2', 'PC3', 'PC4'])
-    explained_variance.to_csv(f"{prefix}_values.txt", sep='\t', index_label='PC',header=['Explained Variance'])
+    explained_variance.to_csv(f"{prefix}_values.txt", sep='\t', index_label='PC',header=['Explained_Variance'])
 
 def main():
     args = parse_arguments()

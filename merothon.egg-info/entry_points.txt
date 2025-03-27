@@ -4,5 +4,7 @@ count_mutations = merothon.Calculate_Fasta_Mutations:main
 map_chromosomes = merothon.Reference_to_Scaffold_ChrID:main
 permutation_test = merothon.Permutation_Test:main
 plot_genotypes = merothon.Plot_Genotypes:main
+plot_ld = merothon.Plot_LD:main
 polarize_vcf = merothon.Assign_Ancestral_Allele:main
 vcf_to_pca = merothon.VCF_to_PCA:main
+

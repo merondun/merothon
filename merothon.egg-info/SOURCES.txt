@@ -6,6 +6,7 @@ merothon/Calculate_Fasta_Mutations.py
 merothon/Calculate_R2_LD_VCFs.py
 merothon/Permutation_Test.py
 merothon/Plot_Genotypes.py
+merothon/Plot_LD.py
 merothon/Reference_to_Scaffold_ChrID.py
 merothon/VCF_to_PCA.py
 merothon/__init__.py
