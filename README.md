@@ -148,6 +148,8 @@ BP_A_bin        BP_B_bin        R2
 27890000        27930000        0.34322271005154636
 ```
 
+---
+
 ### Identify Chromosomes in Scaffold Assembly
 
 Using 
@@ -169,6 +171,27 @@ map_chromosomes ref_to_asm.paf draft.fa.fai draft_chromosomes.txt
 
 **OUTPUTS:**
 
+A text file, e.g. `map.txt` with these columns: 
+
+| **Scaffold** | The scaffold name from the draft genome. |
+| **Chromosome** | The reference chromosome to which the scaffold aligns most. |
+| **Alignment Percentage** | The percentage of the scaffold's total length that aligns to the chosen chromosome. |
+| **Scaffold Length** | The total length of the scaffold in bp. |
+| **Predominant Strand** | The strand (‘+’ or ‘-’) that has the majority alignment. |
+
+```
+scaffold_3      Chr03   46.81%  26619930        +
+scaffold_4      Chr04   70.76%  30141089        +
+scaffold_5      Chr05   79.21%  26038907        +
+scaffold_6      Chr06   61.29%  33441831        +
+scaffold_7      Chr07   80.63%  34284707        +
+scaffold_8      Chr08   73.61%  36794498        +
+scaffold_9      Chr09   71.37%  29494829        +
+scaffold_10     Chr10   66.20%  35785193        +
+```
+
+
+---
 
 ### Plot Genotypes from VCF
 
@@ -200,6 +223,8 @@ plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --
 **OUTPUT:**
 
 ![Example Plot](examples/Eggtype.png)
+
+---
 
 ### Genomic Background Permutation Tests 
 
@@ -280,6 +305,8 @@ perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
 
 ![Example Plot Permutations](examples/Permutation_Test.png)
 
+---
+
 ### Assign Ancestral Allele
 
 The command `polarize_vcf` assigns a vcf INFO/AA field to a vcf (**must have index, e.g. bcftools index $vcf**). Simply provide a vcf, and output prefix (output will be gzipped), and a list of the outgroup samples, one per line. It works on haploid and diploid data. 
@@ -334,6 +361,7 @@ chr_1   22843   T       C       C       1/1     ./.
 chr_1   23004   A       G       U       ./.     ./.
 ```
 
+---
 
 ### Calculating R2 All SNPs, 2 VCFS
 
@@ -361,6 +389,7 @@ If you have any invariant or constant sites in your VCF, you will get a warning 
 | chr_MT  | 192     | chr_MT  | 4270    | 0                         | 0                         | 0.20816783216783216        |
 | chr_MT  | 196     | chr_MT  | 4270    | 0                         | 0                         | 0.19325217121588079        |
 
+---
 
 ### Count Fasta Mutations
 
