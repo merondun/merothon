@@ -174,10 +174,15 @@ map_chromosomes ref_to_asm.paf draft.fa.fai draft_chromosomes.txt
 A text file, e.g. `map.txt` with these columns: 
 
 **Scaffold:** The scaffold name from the draft genome. 
+
 **Chromosome:** The reference chromosome to which the scaffold aligns most. 
+
 **Alignment Percentage:** The percentage of the scaffold's total length that aligns to the chosen chromosome. 
+
 **Scaffold Length:** The total length of the scaffold in bp. 
+
 **Predominant Strand:** The strand (‘+’ or ‘-’) that has the majority alignment. 
+
 
 ```
 scaffold_3      Chr03   46.81%  26619930        +
