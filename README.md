@@ -152,7 +152,7 @@ BP_A_bin        BP_B_bin        R2
 
 ### Identify Chromosomes in Scaffold Assembly
 
-Using 
+This script takes as input a `PAF` alignment file between a draft and reference, a `.fai` index from the draft, and identifies which scaffolds correspond to which reference chromosomes. 
 
 ```
 minimap2 -x asm20 ${REFERENCE_FASTA} draft.fa --secondary=no -t ${THREADS} -o ref_to_asm.paf
@@ -164,7 +164,7 @@ map_chromosomes ref_to_asm.paf draft.fa.fai draft_chromosomes.txt
 **INPUTS:**
 
 * `--paf` PAF alignment file between chromosome-level reference and draft assembly.
-* `--fai` Samtools index file. 
+* `--fai` Samtools index file for the draft genome. 
 * `--min_size` Minimum scaffold size, in Mb.  
 * `--out` outfile.
 
@@ -173,11 +173,11 @@ map_chromosomes ref_to_asm.paf draft.fa.fai draft_chromosomes.txt
 
 A text file, e.g. `map.txt` with these columns: 
 
-| **Scaffold** | The scaffold name from the draft genome. |
-| **Chromosome** | The reference chromosome to which the scaffold aligns most. |
-| **Alignment Percentage** | The percentage of the scaffold's total length that aligns to the chosen chromosome. |
-| **Scaffold Length** | The total length of the scaffold in bp. |
-| **Predominant Strand** | The strand (‘+’ or ‘-’) that has the majority alignment. |
+**Scaffold:** The scaffold name from the draft genome. 
+**Chromosome:** The reference chromosome to which the scaffold aligns most. 
+**Alignment Percentage:** The percentage of the scaffold's total length that aligns to the chosen chromosome. 
+**Scaffold Length:** The total length of the scaffold in bp. 
+**Predominant Strand:** The strand (‘+’ or ‘-’) that has the majority alignment. 
 
 ```
 scaffold_3      Chr03   46.81%  26619930        +

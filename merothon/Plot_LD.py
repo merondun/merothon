@@ -14,10 +14,10 @@ def bin_ld_data(df, window_size):
     return df
 
 def plot_ld_heatmap(input_file, out, win_size, highlight_region=None):
-    # Read the LD file, skipping the first row (header)
+    # Read  LD file, skipping the header
     df = pd.read_csv(input_file, sep='\s+')
 
-    # Convert columns to numeric
+    # to numeric
     df['BP_A'] = pd.to_numeric(df['BP_A'])
     df['BP_B'] = pd.to_numeric(df['BP_B'])
     df['R2'] = pd.to_numeric(df['R2'])
@@ -25,11 +25,11 @@ def plot_ld_heatmap(input_file, out, win_size, highlight_region=None):
     # Bin data into N KB windows
     df_binned = bin_ld_data(df, win_size)
 
-    # Save the binned data
+    # Save 
     binned_output_file = f"{out}_windows.txt"
     df_binned.to_csv(binned_output_file, sep='\t', index=False)
 
-    # Pivot table for heatmap
+    # Pivot
     ld_matrix = df_binned.pivot(index='BP_B_bin', columns='BP_A_bin', values='R2')
 
     # Plot
@@ -39,9 +39,9 @@ def plot_ld_heatmap(input_file, out, win_size, highlight_region=None):
     plt.ylabel(f"BP_B ({win_size} KB bins)")
     plt.title("Linkage Disequilibrium (LD) Heatmap")
 
-    # Highlight a specific region (chr:start-end)
+    # Highlight chr:start-end
     if highlight_region:
-        start, end = highlight_region  # Expecting a tuple (start, end)
+        start, end = highlight_region  # Expecting start, end
         ax = plt.gca()
 
         # Find closest indices for given positions
@@ -56,9 +56,9 @@ def plot_ld_heatmap(input_file, out, win_size, highlight_region=None):
                                  linewidth=2, edgecolor='blue', facecolor='none')
         ax.add_patch(rect)
 
-    # Determine file extension and save plot accordingly
+    # save plot 
     if not out.lower().endswith((".png", ".pdf")):
-        out += ".png"  # Default to PNG if no valid extension is provided
+        out += ".png"  # Default to png
 
     plt.savefig(out, dpi=300, bbox_inches='tight')
     plt.close()

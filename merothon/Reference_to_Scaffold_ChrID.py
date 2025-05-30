@@ -15,7 +15,7 @@ def main():
     alignment_file = args.paf
     fai_file = args.fai
     output_file = args.out
-    min_size = args.min_size * 1e6  # Convert Mb to base pairs
+    min_size = args.min_size * 1e6  # Convert Mb to bp
 
     # Read scaffold lengths from the .fai file
     scaffold_lengths = {}
@@ -26,11 +26,11 @@ def main():
             length = int(parts[1])
             scaffold_lengths[scaffold] = length
 
-    # Dictionary to store the total aligned length for each scaffold-chromosome pair
+    # Dictionary of total aligned length for each scaffold-chromosome pair
     alignment_lengths = defaultdict(lambda: defaultdict(int))
     strand_counts = defaultdict(lambda: defaultdict(lambda: {'+': 0, '-': 0}))
 
-    # Read the alignment file and process each line
+    # Read aln file and process each line
     with open(alignment_file, 'r') as f:
         for line in f:
             fields = line.strip().split()
@@ -41,21 +41,21 @@ def main():
             strand = fields[4]
             aligned_length = scaffold_end - scaffold_start
 
-            # Update the total aligned length for the scaffold-chromosome pair
+            # Update total aligned length for scaffold-chromosome pair
             alignment_lengths[scaffold][chromosome] += aligned_length
             strand_counts[scaffold][chromosome][strand] += aligned_length
 
-    # Determine the most related chromosome and predominant strand for each scaffold
+    # Determine most related chromosome and predominant strand for each scaffold
     scaffold_to_chromosome = {}
     for scaffold, chrom_lengths in alignment_lengths.items():
-        if scaffold_lengths[scaffold] > min_size:  # Only consider scaffolds greater than min_size
+        if scaffold_lengths[scaffold] > min_size:  # only consider scaffolds greater than min_size
             total_length = scaffold_lengths[scaffold]
             best_chromosome = max(chrom_lengths, key=chrom_lengths.get)
             best_percentage = (chrom_lengths[best_chromosome] / total_length) * 100
             predominant_strand = '+' if strand_counts[scaffold][best_chromosome]['+'] >= strand_counts[scaffold][best_chromosome]['-'] else '-'
             scaffold_to_chromosome[scaffold] = (best_chromosome, best_percentage, total_length, predominant_strand)
 
-    # Write the results to the output file
+    # Write to the output file
     with open(output_file, 'w') as f:
         for scaffold, (chromosome, percentage, length, strand) in scaffold_to_chromosome.items():
             f.write(f"{scaffold}\t{chromosome}\t{percentage:.2f}%\t{length}\t{strand}\n")

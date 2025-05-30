@@ -38,13 +38,13 @@ def extract_genotypes(vcf, positions):
     return pd.DataFrame(records)
 
 def prepare_plot_data(merged_data):
-    # Convert 'Genotype' to categorical and map to codes, including 'Missing' handling
+    # Convert 'Genotype' to categorical and map to codes, including missing data
     merged_data['GenotypeValue'] = pd.Categorical(merged_data['Genotype']).codes
     pivot_table = merged_data.pivot_table(index='Phenotype.ID', columns='pos', values='GenotypeValue', aggfunc='first', fill_value=-1)
     return pivot_table
 
 def plot_genotype_counts(plot_data, merged_data, output_file):
-    # Identify unique genotypes and assign each a discrete color from 'viridis'
+    # Identify unique genotypes and assign each a discrete color from viridis apackage
     unique_genotypes = np.unique(merged_data['Genotype'])
     n_genotypes = len(unique_genotypes)
     
@@ -60,13 +60,13 @@ def plot_genotype_counts(plot_data, merged_data, output_file):
     for (i, j), genotype_code in np.ndenumerate(plot_data):
         ax.fill_betweenx([i-0.5, i+0.5], j-0.5, j+0.5, color=genotype_to_color.get(unique_genotypes[genotype_code], 'white'))
 
-    # Set axis ticks
+    # Set  ticks
     ax.set_xticks(range(len(plot_data.columns)))
     ax.set_xticklabels(plot_data.columns, rotation=90)
     ax.set_yticks(range(len(plot_data.index)))
     ax.set_yticklabels(plot_data.index)
 
-    # Create a legend
+    # legend
     legend_elements = [Patch(facecolor=genotype_to_color[geno], label=geno) for geno in unique_genotypes]
     ax.legend(handles=legend_elements, bbox_to_anchor=(1.05, 1), loc='upper left', title="Genotype")
 
