@@ -1,67 +1,49 @@
 import argparse
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
 import matplotlib.patches as patches
+import numpy as np
 
 def bin_ld_data(df, window_size):
-    # Bin BP_A and BP_B into N KB windows
     df['BP_A_bin'] = (df['BP_A'] // (window_size * 1000)) * (window_size * 1000)
     df['BP_B_bin'] = (df['BP_B'] // (window_size * 1000)) * (window_size * 1000)
-
-    # Average R2 values within each window
     df = df.groupby(['BP_A_bin', 'BP_B_bin'], as_index=False)['R2'].mean()
     return df
 
 def plot_ld_heatmap(input_file, out, win_size, highlight_region=None):
-    # Read  LD file, skipping the header
     df = pd.read_csv(input_file, sep='\s+')
-
-    # to numeric
     df['BP_A'] = pd.to_numeric(df['BP_A'])
     df['BP_B'] = pd.to_numeric(df['BP_B'])
     df['R2'] = pd.to_numeric(df['R2'])
-
-    # Bin data into N KB windows
     df_binned = bin_ld_data(df, win_size)
-
-    # Save 
     binned_output_file = f"{out}_windows.txt"
     df_binned.to_csv(binned_output_file, sep='\t', index=False)
 
-    # Pivot
     ld_matrix = df_binned.pivot(index='BP_B_bin', columns='BP_A_bin', values='R2')
-
-    # Plot
     plt.figure(figsize=(10, 7))
-    ax = sns.heatmap(ld_matrix, cmap='YlOrRd', cbar_kws={'label': 'R²'}, square=True)
+    im = plt.imshow(ld_matrix.values, cmap='YlOrRd', aspect='equal', origin='lower',
+                    extent=[ld_matrix.columns.min(), ld_matrix.columns.max(), 
+                            ld_matrix.index.min(), ld_matrix.index.max()])
+    cbar = plt.colorbar(im)
+    cbar.set_label('R²')
     plt.xlabel(f"BP_A ({win_size} KB bins)")
     plt.ylabel(f"BP_B ({win_size} KB bins)")
     plt.title("Linkage Disequilibrium (LD) Heatmap")
 
-    # Highlight chr:start-end
     if highlight_region:
-        start, end = highlight_region  # Expecting start, end
-        ax = plt.gca()
-
-        # Find closest indices for given positions
-        bp_a_values = ld_matrix.columns.to_numpy()
-        bp_b_values = ld_matrix.index.to_numpy()
-
-        start_idx = (abs(bp_a_values - start)).argmin()
-        end_idx = (abs(bp_a_values - end)).argmin()
-
-        # Draw rectangle outline
-        rect = patches.Rectangle((start_idx, start_idx), end_idx - start_idx, end_idx - start_idx,
+        start, end = highlight_region
+        rect = patches.Rectangle((start, start), end - start, end - start,
                                  linewidth=2, edgecolor='blue', facecolor='none')
-        ax.add_patch(rect)
+        plt.gca().add_patch(rect)
 
-    # save plot 
     if not out.lower().endswith((".png", ".pdf")):
-        out += ".png"  # Default to png
+        out += ".png"
 
     plt.savefig(out, dpi=300, bbox_inches='tight')
     plt.close()
+    print(f"LD plotted successfully, output within {out}")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -71,7 +53,6 @@ def main():
     parser.add_argument("--highlight", help="Highlight region as start-end (e.g., 700-900)")
     args = parser.parse_args()
 
-    # Parse highlight region if provided
     highlight_region = None
     if args.highlight:
         try:
@@ -84,3 +65,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -7,4 +7,3 @@ plot_genotypes = merothon.Plot_Genotypes:main
 plot_ld = merothon.Plot_LD:main
 polarize_vcf = merothon.Assign_Ancestral_Allele:main
 vcf_to_pca = merothon.VCF_to_PCA:main
-

@@ -1,3 +1,5 @@
+![Merothon](examples/logo.png)
+
 # merothon: daily runs with python
 
 merothon is a collection of scripts designed for omic data, typically scripts I re-use frequently or are part of published papers.
@@ -9,6 +11,7 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
   - [VCF to PCA](#vcf-to-pca)
   - [Plot LD](#plot-ld)
   - [Identify Chromosomes in Scaffold Assembly](#identify-chromosomes-in-scaffold-assembly)
+  - [Subset Proportion of SNPs in VCF](#subset-proportion-of-snps-in-vcf)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
   - [Genomic Background Permutation Tests](#genomic-background-permutation-tests)
   - [Assign Ancestral Allele](#assign-ancestral-allele)
@@ -28,14 +31,13 @@ pip install -e .
 map_chromosomes -h 
 ```
 
-With conda (`v0.3.0`)
+With conda (`v0.4.2`)
 
 ```
-conda config --add channels merothon
-conda create -n merothon merothon
+mamba install heritabilities::merothon
 ```
 
-The package requires scikit-allel, so there are quite some dependencies. also installable with a fresh environment and setup.py:
+The package requires scikit-allel for memory efficient PCA, so there are some necessary dependencies. also installable with a fresh environment and setup.py:
 
 ```
 git clone https://github.com/merondun/merothon.git
@@ -107,7 +109,8 @@ Simple script to visualize LD. Runs in about 1 minute with low memory on a plink
 Plink LD file can be created like:
 
 ```
-plink --allow-extra-chr --double-id --vcf chr_6.vcf.gz --r2 --out chr_6 --ld-window 999999999 --ld-window-kb 1000000000
+plink --allow-extra-chr --double-id --vcf examples/chr6.vcf.gz --r2 --out examples/chr6 --ld-window 999999999 --ld-window-kb 1000000000
+gzip examples/chr6.ld #script accepts .gz input
 ```
 
 **INPUTS:**
@@ -129,12 +132,12 @@ CHR_A         BP_A SNP_A  CHR_B         BP_B SNP_B           R2
 Example command (from `~/merothon/examples/`): 
 
 ```
-plot_ld --input inversion/chr_6_LD.ld --out chr_6.png --win_size 10 --highlight 29890958-31208777
+python plot_inv.py --input examples/chr6.ld.gz --out examples/chr6.png --win_size 10 --highlight 29890958-31208777
 ```
 
 **OUTPUTS:**
 
-![LD](examples/chr_6.png)
+![LD](examples/chr6.png)
 
 The script will also output a table with mean LD in the specified windows: 
 
@@ -197,6 +200,31 @@ scaffold_10     Chr10   66.20%  35785193        +
 
 
 ---
+
+
+### Subset Proportion of SNPs in VCF
+
+Subsets a proportion of variants from a VCF, ranging from 0.0 - 1.0. **Relies on `bcftools` available on your path!**.  
+
+**INPUTS:**
+
+* `--vcf` Input `.vcf`. file, can be gzipped. `
+* `--prop` Proportion of variants to retain, between 0.0 - 1.0.
+* `--out` Output VCF, gzipped, include `.vcf.gz`. 
+
+Example from /examples/ directory:
+
+```
+subset_snps --vcf examples/chr_MT_Biallelic_SNPs.vcf.gz --prop 0.5 --out examples/chr_MT_Biallelic_SNPs.vcf.gz 
+```
+
+**OUTPUT:**
+
+Reduced size `.vcf.gz`.
+
+
+---
+
 
 ### Plot Genotypes from VCF
 
@@ -284,7 +312,7 @@ Which can be plotted in R. You can assess significance based on how many permute
 
 ```
 library(tidyverse)
-perm = read_tsv('~/merothon/examples/chr_MT_log2CNV_Permutations.txt')
+perm = read_tsv('examples/chr_MT_log2CNV_Permutations.txt')
 
 #set p-threshold, and the number of tests performed for bonferonni correction 
 alpha = 0.05 
@@ -300,12 +328,14 @@ perm_results = perm %>%
   )
 
 #plot histogram by gene
-perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
+p = perm_plot = perm %>% ggplot(aes(x=permuted_difference))+
   geom_histogram()+
   geom_vline(data=perm_results,aes(xintercept=obs),lty=2,col='blue')+ #add vertical lines 
   geom_text(data=perm_results,aes(x=Inf,y=Inf,label=is_significant),vjust=1,hjust=1.2)+ #add significance label
   facet_wrap(name~.,scales='free')+
+  ylab('Count')+xlab('Difference')+
   theme_bw()
+ggsave('examples/Permutation_Test.png', p, dpi=300, height = 4, width = 7)
 ```
 
 ![Example Plot Permutations](examples/Permutation_Test.png)
@@ -381,7 +411,7 @@ NOTE: This only works correctly for biallelic SNPs. It works for variable ploidy
 * `--out` output file 
 
 ```
-calculate_r2 --vcf1 chr_MT_Biallelic_SNPs.vcf.gz --vcf2 chr_MT_Target_SNP.vcf.gz --out chr_MT_LD.txt
+calculate_r2 --vcf1 examples/chr_MT_Biallelic_SNPs.vcf.gz --vcf2 examples/chr_MT_Target_SNP.vcf.gz --out examples/chr_MT_LD.txt
 ```
 
 If you have any invariant or constant sites in your VCF, you will get a warning "ConstantInputWarning: An input array is constant; the correlation coefficient is not defined.", but it does not affect calculations for other sites (output will be nan). 

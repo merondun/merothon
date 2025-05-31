@@ -1,6 +1,8 @@
 import argparse
 import pysam
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch

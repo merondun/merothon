@@ -1,5 +1,5 @@
 package:
-  name: merothon
+  name: half_merothon
   version: "0.4.2"
 
 source:
@@ -32,7 +32,7 @@ requirements:
     - pysam
     - matplotlib-base
     - biopython
-    - scikit-allel
+    #    - scikit-allel
 
 test:
   imports:

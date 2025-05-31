@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='merothon',
+    name='half_merothon',
     version='0.4.2',
     packages=find_packages(),
     description='Genomic utility scripts',
@@ -25,7 +25,7 @@ setup(
         'pysam',
         'matplotlib-base',
         'biopython',
-        'scikit-allel',
+#        'scikit-allel',
     ],
 )
 
