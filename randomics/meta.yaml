@@ -40,7 +40,7 @@ test:
 
 about:
   home: https://github.com/merondun/merothon
-  license: GPL-3.0
+  license: GPL3.0
   summary: 'Genomic utility scripts for various analyses.'
   license_file: LICENSE
 

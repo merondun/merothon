@@ -22,7 +22,16 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
 
 Installation (only unix tested) is easiest with conda (or preferably mamba..!):
 
-For newest version, it's best to just pull and install with pip:
+With conda (`v0.4.2`)
+
+```
+mamba install -c heritabilities merothon
+
+# LITE version: no scikit-allel. Runs everything except vcf_to_pca
+mamba install -c heritabilities half_merothon
+```
+
+Or clone and install: 
 
 ```
 git clone git@github.com:merondun/merothon.git
@@ -31,25 +40,12 @@ pip install -e .
 map_chromosomes -h 
 ```
 
-With conda (`v0.4.2`)
+The environment requires scikit-allel for PCA, so there are quite some dependencies. If you don't need `vcf_to_pca`, you can install **half_merothon** instead.
 
-```
-mamba install heritabilities::merothon
-```
-
-The package requires scikit-allel for memory efficient PCA, so there are some necessary dependencies. also installable with a fresh environment and setup.py:
-
-```
-git clone https://github.com/merondun/merothon.git
-mamba create -n merothon python=3.8
-mamba activate merothon
-#cd merothon #or wherever the git repo was downloaded
-pip install .
-```
 
 ## Contact
 
-For any questions or concerns, please open an issue on this repository or reach out to me (Justin Merondun): heritabilities@gmail.com
+For any questions or concerns, please open an issue on this repository or reach out to me (Justin Merondun): heritabilities [@] gmail.com
 
 ## Scripts
 
@@ -89,7 +85,7 @@ SampleID        PC1     PC2     PC3     PC4
 016_CC_GRW_HUN_F        20.696783       43.30594        -0.16141385     -4.655875
 ```
 
-And a txt with the percent variation explained: 
+And a `.txt` with the percent variation explained: 
 
 ```
 cat chr_MT-Egg_values.txt
@@ -110,7 +106,9 @@ Plink LD file can be created like:
 
 ```
 plink --allow-extra-chr --double-id --vcf examples/chr6.vcf.gz --r2 --out examples/chr6 --ld-window 999999999 --ld-window-kb 1000000000
-gzip examples/chr6.ld #script accepts .gz input
+
+# Script accepts .gz input
+gzip examples/chr6.ld 
 ```
 
 **INPUTS:**
@@ -132,7 +130,7 @@ CHR_A         BP_A SNP_A  CHR_B         BP_B SNP_B           R2
 Example command (from `~/merothon/examples/`): 
 
 ```
-python plot_inv.py --input examples/chr6.ld.gz --out examples/chr6.png --win_size 10 --highlight 29890958-31208777
+plot_ld --input chr6.ld.gz --out chr6.png --win_size 10 --highlight 29890958-31208777
 ```
 
 **OUTPUTS:**
@@ -208,14 +206,14 @@ Subsets a proportion of variants from a VCF, ranging from 0.0 - 1.0. **Relies on
 
 **INPUTS:**
 
-* `--vcf` Input `.vcf`. file, can be gzipped. `
+* `--vcf` Input `.vcf` file, can be gzipped.
 * `--prop` Proportion of variants to retain, between 0.0 - 1.0.
 * `--out` Output VCF, gzipped, include `.vcf.gz`. 
 
 Example from /examples/ directory:
 
 ```
-subset_snps --vcf examples/chr_MT_Biallelic_SNPs.vcf.gz --prop 0.5 --out examples/chr_MT_Biallelic_SNPs.vcf.gz 
+subset_snps --vcf chr_MT_Biallelic_SNPs.vcf.gz --prop 0.5 --out chr_MT_Biallelic_SNPs.Subset.vcf.gz 
 ```
 
 **OUTPUT:**
@@ -261,7 +259,7 @@ plot_genotypes --vcf chr_MT_Biallelic_SNPs.vcf.gz --metadata Egg_Metadata.txt --
 
 ### Genomic Background Permutation Tests 
 
-The command `permutation_test` first calculates the observed mean within a target region, and then performs *n* permutations where it samples an equal number of windows/sites within the target region from the remaining chromosomal background - without replacement, shuffles the labels, and calculates the mean of each. Then it takes the difference between target$mean - background$mean, repeating this *n* times. 
+The command `permutation_test` first calculates the observed mean within a target region, and then performs *n* permutations where it samples an equal number of windows/sites within the target region from the remaining chromosomal background (without replacement), shuffles the labels, and calculates the mean of each. Then it takes the difference between `target$mean - background$mean`, repeating this *n* times. 
 
 **INPUTS (tab sep, NO HEADERS):**
 
@@ -292,7 +290,14 @@ Example from /examples/ directory: `permutation_test --all_data chr_MT_log2CNV.b
 
 **OUTPUTS:**
 
- region $name, observed difference of mean value within region - mean value from background, and the number of windows/sites considered within the target region. Window overlap is INCLUSIVE, so if the region overlaps the genomic coordinates at all, it will be included. For base-pair data, simply encode $end as $start. 
+A `.txt` file with these columns:
+
+* **Region**: `$name` of region
+* **Observed**: Observed difference of mean value within region - mean value from background. Note that since this is the real observed value, it only has a single value per region.
+* **Permutations**: Difference calculated for *n* permutations. Each row corresponds to a different permutation. 
+* **Windows**: Number of windows considered for that permutation. 
+
+Window overlap is INCLUSIVE, so if the region overlaps the genomic coordinates at all, it will be included. For base-pair data, simply encode $end as $start. 
 
 ```
 head chr_MT_log2CNV_Permutations.txt
