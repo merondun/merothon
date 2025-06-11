@@ -178,7 +178,7 @@ A text file, e.g. `map.txt` with these columns:
 
 **Chromosome:** The reference chromosome to which the scaffold aligns most. 
 
-**Alignment Percentage:** The percentage of the scaffold's total length that aligns to the chosen chromosome. 
+**Alignment Percentage:** The percentage of the scaffold's total length that aligns to the chosen chromosome. Note that in the case of redundant or overlapping alignments, this value could exceed 100%! 
 
 **Scaffold Length:** The total length of the scaffold in bp. 
 
