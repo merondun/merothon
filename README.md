@@ -2,7 +2,7 @@
 
 # merothon: daily runs with python
 
-merothon is a collection of scripts designed for omic data, typically scripts I re-use frequently or are part of published papers.
+merothon is a collection of scripts designed for handling genomic data. 
 
 ## Table of Contents
 
@@ -17,12 +17,13 @@ merothon is a collection of scripts designed for omic data, typically scripts I 
   - [Assign Ancestral Allele](#assign-ancestral-allele)
   - [Calculating R2 All SNPs, 2 VCFS](#calculating-r2-all-snps-2-vcfs)
   - [Count Fasta Mutations](#count-fasta-mutations)
+- [Changelog](#changelog)
 
 ## Installation
 
 Installation (only unix tested) is easiest with conda (or preferably mamba..!):
 
-With conda (`v0.4.2`)
+With conda (`v0.4.3`)
 
 ```
 mamba install -c heritabilities merothon
@@ -202,23 +203,52 @@ scaffold_10     Chr10   66.20%  35785193        +
 
 ### Subset Proportion of SNPs in VCF
 
-Subsets a proportion of variants from a VCF, ranging from 0.0 - 1.0. **Relies on `bcftools` available on your path!**.  
+Subsets a proportion of variants from a VCF, ranging from 0.0 - 1.0. This script will index the vcf if there is no `tbi` or `csi`. This is relatively fast, but will take time with massive vcfs. Took ~2 min on a 44M SNP VCF with 12 samples (~3 Gb). 
 
 **INPUTS:**
 
 * `--vcf` Input `.vcf` file, can be gzipped.
 * `--prop` Proportion of variants to retain, between 0.0 - 1.0.
+* `--num` Number of variants to retain, any integer.
 * `--out` Output VCF, gzipped, include `.vcf.gz`. 
+* `--threads` Number of threads for bcftools. 
 
 Example from /examples/ directory:
 
 ```
-subset_snps --vcf chr_MT_Biallelic_SNPs.vcf.gz --prop 0.5 --out chr_MT_Biallelic_SNPs.Subset.vcf.gz 
+subset_snps --vcf chr_MT_Biallelic_SNPs.vcf.gz --prop 0.5 --out chr_MT_Biallelic_SNPs.Subset.vcf.gz --threads 2
+```
+
+OR 
+
+```
+subset_snps --vcf chr_MT_Biallelic_SNPs.vcf.gz --num 5 --out chr_MT_Biallelic_SNPs.Subset.vcf.gz --threads 2
 ```
 
 **OUTPUT:**
 
 Reduced size `.vcf.gz`.
+
+From above, specifying proportion: 
+
+```
+Index not found, creating index...
+Subsetted VCF from: chr_MT_Biallelic_SNPs.vcf.gz
+Output VCF: chr_MT_Biallelic_SNPs.Subset.vcf.gz
+Proportion requested: 0.50
+Original SNP count: 838
+Subset SNP count: 419
+```
+
+From above, specifying number: 
+
+```
+Subsetted VCF from: chr_MT_Biallelic_SNPs.vcf.gz
+Output VCF: chr_MT_Biallelic_SNPs.Subset.vcf.gz
+Number requested: 5
+Original SNP count: 838
+Subset SNP count: 5
+```
 
 
 ---
@@ -487,3 +517,9 @@ CGATCAGCGCGTAAGCGGGAG #ref
 CGATCAGCGTGTTANCGNGCG
 CGATCAGCGCGTAAGCGGGAG #ref 
 ```
+
+<!-- TOC --><a name="changelog"></a>
+## Changelog
+
+**v0.4.3**: 
+- added a discrete number of variants to be called for `subset_snps`: instead of just proportion, you can now specify `--num X` for an integer of SNPs. 

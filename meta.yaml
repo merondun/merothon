@@ -1,6 +1,6 @@
 package:
   name: merothon
-  version: "0.4.2"
+  version: "0.4.3"
 
 source:
   path: .
@@ -33,6 +33,7 @@ requirements:
     - matplotlib-base
     - biopython
     - scikit-allel
+    - bcftools
 
 test:
   imports:
