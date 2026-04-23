@@ -225,6 +225,17 @@ head extract.4fold.fa.codons.txt
 8
 ```
 
+If you want a sanity check afterwards, or want to inspect the codons manually and have [seqkit](https://bioinf.shenwei.me/seqkit/) installed, here is a hacky way to inspect a codon number of your choice:
+
+```
+CODON_OUTPUT=extract.4fold.fa.positions.txt
+INPUT_FASTA=codon_aln.fa
+CODON_NUMBER=3
+
+codon=$(awk -v n="$CODON_NUMBER" 'NR==n{print; exit}' "$CODON_OUTPUT")
+s=$((codon-2))
+seqkit subseq -r "${s}:${codon}" "$INPUT_FASTA"
+```
 
 ---
 
