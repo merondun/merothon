@@ -1,9 +1,11 @@
 [console_scripts]
-calculate_r2 = merothon.Calculate_R2_LD_VCFs:main
-count_mutations = merothon.Calculate_Fasta_Mutations:main
-map_chromosomes = merothon.Reference_to_Scaffold_ChrID:main
-permutation_test = merothon.Permutation_Test:main
-plot_genotypes = merothon.Plot_Genotypes:main
-plot_ld = merothon.Plot_LD:main
-polarize_vcf = merothon.Assign_Ancestral_Allele:main
-vcf_to_pca = merothon.VCF_to_PCA:main
+calculate_r2 = merothon.scripts.Calculate_R2_LD_VCFs:main
+count_mutations = merothon.scripts.Calculate_Fasta_Mutations:main
+extract_4fold = merothon.scripts.Extract_4Fold:main
+map_chromosomes = merothon.scripts.Reference_to_Scaffold_ChrID:main
+permutation_test = merothon.scripts.Permutation_Test:main
+plot_genotypes = merothon.scripts.Plot_Genotypes:main
+plot_ld = merothon.scripts.Plot_LD:main
+polarize_vcf = merothon.scripts.Assign_Ancestral_Allele:main
+subset_snps = merothon.scripts.Subset_SNPs:main
+vcf_to_pca = merothon.scripts.VCF_to_PCA:main

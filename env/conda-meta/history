@@ -1,0 +1,3 @@
+==> 2026-04-23 14:45:31 <==
+# cmd: /software/el9/apps/miniconda/24.7.1-2/condabin/mamba create -y --prefix ./env
+# conda version: 24.7.1

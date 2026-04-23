@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='merothon',
-    version='0.4.3',
+    version='0.4.4',
     packages=find_packages(),
     description='Genomic utility scripts',
     author='J Merondun',
@@ -17,15 +17,16 @@ setup(
             'count_mutations=merothon.scripts.Calculate_Fasta_Mutations:main',
             'map_chromosomes=merothon.scripts.Reference_to_Scaffold_ChrID:main',
             'subset_snps=merothon.scripts.Subset_SNPs:main',
+            'extract_4fold=merothon.scripts.Extract_4Fold:main',
         ],
     },
     install_requires=[
         'pandas',
         'numpy',
         'pysam',
-        'matplotlib-base',
+        'matplotlib',
         'biopython',
-        'scikit-allel',
+        'cyvcf2',
     ],
 )
 

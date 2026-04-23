@@ -1,6 +1,16 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: merothon
-Version: 0.4.1
+Version: 0.4.4
 Summary: Genomic utility scripts
 Author: J Merondun
 License-File: LICENSE
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: pysam
+Requires-Dist: matplotlib
+Requires-Dist: biopython
+Requires-Dist: cyvcf2
+Dynamic: author
+Dynamic: license-file
+Dynamic: requires-dist
+Dynamic: summary

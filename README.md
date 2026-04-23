@@ -10,6 +10,7 @@ merothon is a collection of scripts designed for handling genomic data.
 - [Scripts](#scripts)
   - [VCF to PCA](#vcf-to-pca)
   - [Plot LD](#plot-ld)
+  - [Extract 4fold degenerate positions from MSA](#extract-4fold-degenerate-positions-from-msa)
   - [Identify Chromosomes in Scaffold Assembly](#identify-chromosomes-in-scaffold-assembly)
   - [Subset Proportion of SNPs in VCF](#subset-proportion-of-snps-in-vcf)
   - [Plot Genotypes from VCF](#plot-genotypes-from-vcf)
@@ -23,13 +24,10 @@ merothon is a collection of scripts designed for handling genomic data.
 
 Installation (only unix tested) is easiest with conda (or preferably mamba..!):
 
-With conda (`v0.4.3`)
+With conda (`v0.4.4`)
 
 ```
 mamba install -c heritabilities merothon
-
-# LITE version: no scikit-allel. Runs everything except vcf_to_pca
-mamba install -c heritabilities half_merothon
 ```
 
 Or clone and install: 
@@ -41,9 +39,6 @@ pip install -e .
 map_chromosomes -h 
 ```
 
-The environment requires scikit-allel for PCA, so there are quite some dependencies. If you don't need `vcf_to_pca`, you can install **half_merothon** instead.
-
-
 ## Contact
 
 For any questions or concerns, please open an issue on this repository or reach out to me (Justin Merondun): heritabilities [@] gmail.com
@@ -52,7 +47,7 @@ For any questions or concerns, please open an issue on this repository or reach 
 
 ### VCF to PCA
 
-Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is standard, as implemented with `scikit-allel`. Shows axes 1-4 with variation explained. Color-coded by a metadata file and a specified population / phenotype of interest. 
+Creates a PCA from a VCF, centering genotypes and scaling (Patterson's), as is standard, as implemented with `scikit-allel`. Shows axes 1-4 with variation explained. Color-coded by a metadata file and a specified population / phenotype of interest. Missing genotypes are imputed with the mean genotype at that SNP. 
 
 **INPUTS:**
 
@@ -151,6 +146,88 @@ BP_A_bin        BP_B_bin        R2
 ```
 
 ---
+
+### Extract 4fold degenerate positions from MSA
+
+This script takes a codon-aware multiple sequence alignment (MSA) in FASTA format and extracts shared 4-fold degenerate sites.
+
+**A site is retained only if:**
+
+* all contributing sequences have a complete, unambiguous codon (A/C/G/T, no gaps),
+* the codon belongs to a 4-fold degenerate family under the standard genetic code (GCN, CGN, GGN, CTN, CCN, TCN, ACN, GTN),
+* and all sequences share the same first two codon bases (i.e., the same codon family).
+
+**Start codon handling**
+
+If the alignment contains gaps or leading sequence before the coding start, the script identifies the first shared in-frame `ATG` across the alignment and uses this as the reference start position.
+
+By default, all sequences must have `ATG` at this position.
+This can be relaxed using `--min_atg` to require only a subset of sequences (integer).
+
+The alignment is then treated as starting from this position. A trimmed alignment is written to:
+
+```
+$out.trimmed.fa
+```
+
+All reported positions (nucleotide and codon indices) are relative to this inferred `ATG` start.
+
+**INPUTS:**
+
+* `--input` Input codon-aware MSA in FASTA format, 
+* `--out` Output prefix/fasta output name.
+* `--min_atg`  Minimum number of sequences required to share ATG at a position (default: all).
+
+Example command (from `~/merothon/examples/`): 
+
+```
+extract_4fold -input codon_aln.fa --out extract --min_atg 15
+```
+
+**OUTPUTS:**
+
+The screen will print some details about the alignment: 
+
+```
+ATG start found at position 1 with 20/20 sequences
+Input sequences: 20
+Alignment length (nt): 951
+Aligned ATG start (1-based): 1
+Shared 4-fold sites retained: 121
+Output FASTA: extract.4fold.fa
+Output nt positions: extract.4fold.fa.positions.txt
+Output codon indices: extract.4fold.fa.codons.txt
+```
+
+As well as the extracted 4-fold sites:
+
+```
+cat extract.4fold.fa
+>N9750B
+AATAATAAAATGAAACAACAACAAAGCCTGCATGGATTGTAATAATTATTAATTATTCTCTTTATGATCCACCTCCCCCT
+TCACAGTGATATAATAGCTGCTCTCATGTTATGTATTTGTT
+>HART027B
+AATAATAAAATGAAACAACAACAAAACCATCATGTACTGTAGTAATTAATAATTATTCTCTTTAGGGTCCACCTCCGCCT
+TCACAATGATATAACATCTGCTCTTATGTTATGTATTTGTT
+```
+
+Including details on the nucleotide and codon positions of the 4-fold sites (1-based):
+
+```
+head extract.4fold.fa.positions.txt
+6
+9
+24
+
+head extract.4fold.fa.codons.txt
+2
+3
+8
+```
+
+
+---
+
 
 ### Identify Chromosomes in Scaffold Assembly
 
@@ -520,6 +597,9 @@ CGATCAGCGCGTAAGCGGGAG #ref
 
 <!-- TOC --><a name="changelog"></a>
 ## Changelog
+
+**v0.4.4**: 
+- added `extract_4fold`, modify the PCA call to use cyvcf2 and numpy instead of scikit to reduce dependencies, only tested on small VCFs currently...
 
 **v0.4.3**: 
 - added a discrete number of variants to be called for `subset_snps`: instead of just proportion, you can now specify `--num X` for an integer of SNPs. 

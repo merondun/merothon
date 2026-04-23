@@ -1,8 +1,6 @@
 pandas
+numpy
 pysam
 matplotlib
-scipy
-numpy
-scikit-allel
 biopython
-seaborn
+cyvcf2
